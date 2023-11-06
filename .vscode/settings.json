@@ -1,0 +1,9 @@
+{
+    "cmake.mergedCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "cmake.cmakePath": "cmake",
+    "cmake.configureOnOpen": true,
+    "cmake.buildArgs": [
+        "--verbose"
+    ],
+    "cmake.sourceDirectory": "${workspaceFolder}/src"
+}
