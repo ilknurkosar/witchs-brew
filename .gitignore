@@ -62,6 +62,7 @@ dkms.conf
 # Clangd LSP
 .cache
 compile_commands.json
+.clangd
 
 # Build folder
 [Bb]uild

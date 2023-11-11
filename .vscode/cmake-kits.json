@@ -5,5 +5,12 @@
         "cmakeSettings": {
             "PLATFORM": "Web"
         }
+    },
+    {
+        "name": "Emscripten-local",
+        "toolchainFile": "${env:EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+        "cmakeSettings": {
+            "PLATFORM": "Web"
+        }
     }
 ]

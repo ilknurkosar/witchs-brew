@@ -5,5 +5,9 @@
     "cmake.buildArgs": [
         "--verbose"
     ],
-    "cmake.sourceDirectory": "${workspaceFolder}/src"
+    "cmake.sourceDirectory": "${workspaceFolder}/src",
+    "dotnet.defaultSolution": "disable",
+    "clangd.fallbackFlags": [
+        "-I/usr/local/emsdk/upstream/emscripten/system/include"
+    ]
 }
