@@ -131,7 +131,7 @@ static void UpdateDrawFrame(void *arg) {
   // Draw to screen
   BeginDrawing();
     ClearBackground(RAYWHITE);
-    DrawTextureRec(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight},
+    DrawTextureRec(target.depth, (Rectangle){0, 0, screenWidth, -screenHeight},
                    (Vector2){0, 0}, WHITE);
     DrawFPS(10, 10);
   EndDrawing();
