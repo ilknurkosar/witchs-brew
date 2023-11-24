@@ -11,7 +11,21 @@
                 "cwd": "${workspaceFolder}/build"
             },
             "group": "test",
-            "dependsOn":["CMake: build"]
+            "dependsOn": [
+                "CMake: build"
+            ]
+        },
+        {
+            "label": "emrun",
+            "type": "shell",
+            "command": "emrun index.html",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": [
+                "CMake: build"
+            ],
+            "problemMatcher": []
         },
         {
             "type": "cmake",
