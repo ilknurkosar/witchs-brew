@@ -29,6 +29,7 @@ add_custom_target(copy_misc ALL
 
 set(SOURCE_FILES
 		main.cpp
+		customTextures.cpp
 #		raylib_game.c
 #		screen_ending.c
 #		screen_gameplay.c
@@ -62,6 +63,7 @@ if (${PLATFORM} STREQUAL "Web")
 		"-sWASM=1"
 		"-sASYNCIFY"
 		"--preload-file=${RESOURCE_DIRECTORY}"
+#		"-sMAX_WEBGL_VERSION=2"
 		$<$<NOT:$<CONFIG:Debug>>:
 			"--shell-file=${WEB_SHELL_FILE}"
 		>

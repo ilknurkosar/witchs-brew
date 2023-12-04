@@ -1,27 +1,35 @@
 #include "Camera3D.hpp"
+#include "GLES2/gl2.h"
+#include "Rectangle.hpp"
 #include "RenderTexture.hpp"
 #include "Shader.hpp"
+#include "Texture.hpp"
+#include "customTextures.hpp"
 #include "Vector3.hpp"
 #include "raylib.h"
+#include "raymath.h"
 #include "rlgl.h"
 #include <raylib-cpp.hpp>
+#include "raylib-wrap.hpp"
 
-#include <emscripten/emscripten.h>
 
-// TARGET ONLY WEB
-// #if defined(PLATFORM_DESKTOP)
-//    #define GLSL_VERSION            330
-// #else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
-#define GLSL_VERSION 100
-// #endif
+#if defined(PLATFORM_DESKTOP)
+  #define GLSL_VERSION            330
+#else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
+  #define GLSL_VERSION 100
+  #include <emscripten/emscripten.h>
+#endif
 
-static RenderTexture2D LoadRenderTextureDepthTex(int width, int height);
-static void UnloadRenderTextureDepthTex(RenderTexture2D target);
-static void UpdateDrawFrame(void *arg); // Update and draw one frame
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
+#define SHADERS "resources/shaders/glsl" STR(GLSL_VERSION) "/"
+
+static void UpdateDrawFrame(void); // Update and draw one frame
 
 // unnamed Namespace (identical to static in C)
 // makes it so the contents of this namespace is local to this
-// translation-unit(the .cpp file)
+// translation-unit = the .cpp file
 namespace {
 struct RayLocs {
   int camPos, camDir, screenCenter;
@@ -30,169 +38,138 @@ struct RayLocs {
 
 static const int screenWidth = 800;
 static const int screenHeight = 450;
+static const Vector2 screenDim = {screenWidth, screenHeight};
 int main(void) {
 
   // Initialization
   //--------------------------------------------------------------------------------------
-
   raylib::Window window(screenWidth, screenHeight,
                         "raylib [shaders] example - Hybrid render");
 
-  // Load shader and setup location points and values
-  raylib::Shader shader_raymarch(
-      NULL,
-      TextFormat("resources/shaders/glsl%i/hybrid_raymarch.fs", GLSL_VERSION));
-  raylib::Shader shader_raster(
-      0, TextFormat("resources/shaders/glsl%i/hybrid_raster.fs", GLSL_VERSION));
+  SetTraceLogLevel(LOG_DEBUG);
 
-  RayLocs locs_raymarch{.camPos = shader_raymarch.GetLocation("camPos"),
-                        .camDir = shader_raymarch.GetLocation("camDir"),
-                        .screenCenter =
-                            shader_raymarch.GetLocation("screenCenter")};
+  DisableCursor(); // Limit cursor to relative movement inside the window
+  window.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+  // -------------------------------------------------------------------------------------------------------------
+  // Main game loop
+  #ifdef PLATFORM_WEB
+    emscripten_set_main_loop(UpdateDrawFrame, 60, true);
+  #else
+    while(!window.ShouldClose()){
+      UpdateDrawFrame();
+    }
+  #endif
+  return 0;
+}
 
-  Vector2 screenCenter = {.x = screenWidth / 2.0, .y = screenHeight / 2.0};
-  shader_raymarch.SetValue(locs_raymarch.screenCenter, &screenCenter,
-                           SHADER_UNIFORM_VEC2);
+static void UpdateDrawFrame(void) {
+  static raylib::ShadowTexture target(screenWidth, screenHeight);
+  static raylib::Shader shader_shadow(SHADERS "shadow.vs", SHADERS "shadow.fs");
+  static raylib::Shader shader_depth(0, SHADERS "depth.fs");
+  static raylib::Shader shader_geom(SHADERS "geom.vs", SHADERS "geom.fs");
+  static raylib::Shader shader_default(SHADERS "default.vs", SHADERS "default.fs");
+  const GLubyte *rendererName= glGetString(GL_RENDERER);
 
-  // Use Customized function to create writable depth texture buffer
-  RenderTexture2D target = LoadRenderTextureDepthTex(screenWidth, screenHeight);
-
-  raylib::Camera camera{
+  static raylib::Camera camera{
       Vector3{0.5f, 1.0f, 1.5f}, // Camera position
       Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point
       Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
       45.0f,                     // Camera field-of-view Y
       CAMERA_PERSPECTIVE         // Camera projection type
   };
-
-  DisableCursor(); // Limit cursor to relative movement inside the window
-  window.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
-  // -------------------------------------------------------------------------------------------------------------
-  void *myargs[5] = {
-      &shader_raymarch, &shader_raster, &locs_raymarch, &target, &camera,
+  static raylib::Camera light{
+      Vector3{9.0f, 2.0f, 5.0f}, // Camera position
+      Vector3{0.0f, 1.0f, 0.0f}, // Camera looking at point
+      Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
+      45.0f,                     // Camera field-of-view Y
+      CAMERA_PERSPECTIVE         // Camera projection type
   };
+  // Shader locs
+  // static int sg_shadow  = GetShaderLocation(shader_geom, "texture1");
+  // static int sg_viewPos  = GetShaderLocation(shader_geom, "viewPos");
+  // static int sg_matLight = GetShaderLocation(shader_geom, "matLight");
+  // static int sg_lightPos = GetShaderLocation(shader_geom, "lightPos");
+  // static int sg_lightDir = GetShaderLocation(shader_geom, "lightDir");
+  // static int sg_lightCutoff = GetShaderLocation(shader_geom, "lightCutoff");
 
-  emscripten_set_main_loop_arg(UpdateDrawFrame, myargs, 60, true);
-  // Main game loop
-  while (!window.ShouldClose()) // Detect window close button or ESC key
-    UnloadRenderTextureDepthTex(target);
-  return 0;
-}
-
-static void UpdateDrawFrame(void *arg) {
-  void **myargs = (void **)arg;
-  static raylib::Shader &shader_raymarch = *(raylib::Shader *)(myargs[0]);
-  static raylib::Shader &shader_raster = *(raylib::Shader *)(myargs[1]);
-  static RayLocs &locs_raymarch = *(RayLocs *)(myargs[2]);
-  static RenderTexture2D &target = *(RenderTexture2D *)(myargs[3]);
-  static raylib::Camera &camera = *(raylib::Camera *)(myargs[4]);
-  // Camera FOV is pre-calculated in the camera Distance.
-  static double camDist = 1.0 / (tan(camera.fovy * 0.5 * DEG2RAD));
-
+  static int sd_shadow  =   shader_default.GetLocation("texture1");
+  static int sd_ivp  =   shader_default.GetLocation("ivp");
+  static int sd_lightMat  =   shader_default.GetLocation("lightMat");
   // Update
   //----------------------------------------------------------------------------------
   camera.Update(CAMERA_FIRST_PERSON);
+  light.Update(CAMERA_ORBITAL);
 
-  shader_raymarch.SetValue(locs_raymarch.camPos, &(camera.position),
-                           SHADER_UNIFORM_VEC3);
+  Matrix lightMat =
+    MatrixPerspective(light.fovy*DEG2RAD, double(screenWidth)/double(screenHeight), RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR)
+    *
+    light.GetMatrix()
+    ;
+  Matrix ivp =Invert(
+    MatrixPerspective(camera.fovy*DEG2RAD, double(screenWidth)/double(screenHeight), RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR)
+    *
+    camera.GetMatrix()
+    );
+  Vector3 lightDir = Vector3Normalize(light.position - light.target);
+  float cutoff = cosf(DEG2RAD * light.fovy * 0.46f);
 
-  Vector3 camDir = Vector3Scale(
-      Vector3Normalize(Vector3Subtract(camera.target, camera.position)),
-      camDist);
-  shader_raymarch.SetValue(locs_raymarch.camDir, &camDir, SHADER_UNIFORM_VEC3);
+  // TODO: fill all uniforms
+  // shader_depth.SetValue(sg_viewPos,&(camera.position),SHADER_UNIFORM_VEC3);
+  // shader_depth.SetValue(sg_matLight,lightMat);
+  // shader_depth.SetValue(sg_viewPos,&(light.position),SHADER_UNIFORM_VEC3);
+  // shader_depth.SetValue(sg_lightDir,&lightDir,SHADER_UNIFORM_VEC3);
+  // shader_depth.SetValue(sg_lightCutoff,&cutoff,SHADER_UNIFORM_FLOAT);
+
+  shader_default.SetValue(sd_ivp, ivp);
+  shader_default.SetValue(sd_lightMat, lightMat);
   //----------------------------------------------------------------------------------
 
   // Draw
   //----------------------------------------------------------------------------------
   // Draw into our custom render texture (framebuffer)
-  BeginTextureMode(target);
-    ClearBackground(RAYWHITE);
-
-  // Raymarch Scene
-    rlEnableDepthTest(); // Manually enable Depth Test to handle multiple
-                       // rendering methods.
-    shader_raymarch.BeginMode();
-      DrawRectangleRec((Rectangle){0, 0, screenWidth, screenHeight}, WHITE);
-    EndShaderMode();
+  target.BeginMode();
+    ClearBackground(RED);
 
     // Raserize Scene
-    camera.BeginMode();
-      shader_raster.BeginMode();
+    light.BeginMode();
+      shader_shadow.BeginMode();
         DrawCubeWiresV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, RED);
         DrawCubeV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, PURPLE);
         DrawCubeWiresV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f},
-                       DARKGREEN);
+                        DARKGREEN);
         DrawCubeV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, YELLOW);
+        DrawPlane(Vector3{0.0}, Vector2{5.0,5.0}, RED);
         DrawGrid(10, 1.0f);
-      EndShaderMode();
-    EndMode3D();
-  EndTextureMode();
+      shader_shadow.EndMode();
+    light.EndMode();
+  target.EndMode();
 
   // Draw to screen
   BeginDrawing();
-    ClearBackground(RAYWHITE);
-    DrawTextureRec(target.depth, (Rectangle){0, 0, screenWidth, -screenHeight},
-                   (Vector2){0, 0}, WHITE);
+    ClearBackground(GREEN);
+    camera.BeginMode();
+      shader_default.BeginMode();
+        shader_default.SetValue(sd_shadow,target.depth);
+        //TODO: shader_geom exclusively works for DrawMesh(). only use that function
+      // shader_geom.BeginMode();
+        // extra texture needs to be attached again for every draw call
+        // shader_geom.SetValue(sg_shadow,target.depth);
+
+        DrawCubeWiresV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, RED);
+        DrawCubeV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, PURPLE);
+        DrawCubeWiresV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f},
+                        DARKGREEN);
+        DrawCubeV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, YELLOW);
+        DrawPlane(Vector3{0.0}, Vector2{5.0,5.0}, RED);
+        DrawGrid(10, 1.0f);
+      shader_default.EndMode();
+      // shader_geom.EndMode();
+    camera.EndMode();
+    shader_depth.BeginMode();
+      target.depth.Draw(screenDim*.95,0.0,-0.25f,WHITE);
+    shader_depth.EndMode();
     DrawFPS(10, 10);
+    DrawText((char*)rendererName, 10, 40, 5, RED);
   EndDrawing();
   //----------------------------------------------------------------------------------
-}
-
-//------------------------------------------------------------------------------------
-// Define custom functions required for the example
-//------------------------------------------------------------------------------------
-// Load custom render texture, create a writable depth texture buffer
-static RenderTexture2D LoadRenderTextureDepthTex(int width, int height) {
-  RenderTexture2D target = {0};
-
-  target.id = rlLoadFramebuffer(width, height); // Load an empty framebuffer
-
-  if (target.id > 0) {
-    rlEnableFramebuffer(target.id);
-
-    // Create color texture (default to RGBA)
-    target.texture.id =
-        rlLoadTexture(0, width, height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
-    target.texture.width = width;
-    target.texture.height = height;
-    target.texture.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
-    target.texture.mipmaps = 1;
-
-    // Create depth texture buffer (instead of raylib default renderbuffer)
-    target.depth.id = rlLoadTextureDepth(width, height, false);
-    target.depth.width = width;
-    target.depth.height = height;
-    target.depth.format = 19; // DEPTH_COMPONENT_24BIT?
-    target.depth.mipmaps = 1;
-
-    // Attach color texture and depth texture to FBO
-    rlFramebufferAttach(target.id, target.texture.id,
-                        RL_ATTACHMENT_COLOR_CHANNEL0, RL_ATTACHMENT_TEXTURE2D,
-                        0);
-    rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_DEPTH,
-                        RL_ATTACHMENT_TEXTURE2D, 0);
-
-    // Check if fbo is complete with attachments (valid)
-    if (rlFramebufferComplete(target.id))
-      TRACELOG(LOG_INFO, "FBO: [ID %i] Framebuffer object created successfully",
-               target.id);
-
-    rlDisableFramebuffer();
-  } else
-    TRACELOG(LOG_WARNING, "FBO: Framebuffer object can not be created");
-
-  return target;
-}
-
-// Unload render texture from GPU memory (VRAM)
-static void UnloadRenderTextureDepthTex(RenderTexture2D target) {
-  if (target.id > 0) {
-    // Color texture attached to FBO is deleted
-    rlUnloadTexture(target.texture.id);
-    rlUnloadTexture(target.depth.id);
-
-    // NOTE: Depth texture is automatically
-    // queried and deleted before deleting framebuffer
-    rlUnloadFramebuffer(target.id);
-  }
 }
