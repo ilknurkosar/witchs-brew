@@ -9,5 +9,6 @@
     "dotnet.defaultSolution": "disable",
     "clangd.fallbackFlags": [
         "-I/usr/local/emsdk/upstream/emscripten/system/include"
-    ]
+    ],
+    "todo-tree.tree.showBadges": true
 }
