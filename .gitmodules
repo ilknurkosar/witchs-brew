@@ -1,0 +1,6 @@
+[submodule "src/dependencies/raylib-5.0"]
+	path = src/dependencies/raylib-5.0
+	url = https://github.com/raysan5/raylib
+[submodule "src/dependencies/raylib-cpp-5.0"]
+	path = src/dependencies/raylib-cpp-5.0
+	url = https://github.com/RobLoach/raylib-cpp
