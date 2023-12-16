@@ -6,9 +6,11 @@
 #include "Texture.hpp"
 #include "customTextures.hpp"
 #include "Vector3.hpp"
+#include "emscripten/html5.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "rlgl.h"
+#include <cstddef>
 #include <raylib-cpp.hpp>
 #include "raylib-wrap.hpp"
 
@@ -25,7 +27,7 @@
 
 #define SHADERS "resources/shaders/glsl" STR(GLSL_VERSION) "/"
 
-static void UpdateDrawFrame(void); // Update and draw one frame
+static int UpdateDrawFrame(double delta, void* data); // Update and draw one frame
 
 // unnamed Namespace (identical to static in C)
 // makes it so the contents of this namespace is local to this
@@ -53,7 +55,8 @@ int main(void) {
   // -------------------------------------------------------------------------------------------------------------
   // Main game loop
   #ifdef PLATFORM_WEB
-    emscripten_set_main_loop(UpdateDrawFrame, 60, true);
+    emscripten_request_animation_frame_loop(UpdateDrawFrame, 0);
+    emscripten_resume_main_loop();
   #else
     while(!window.ShouldClose()){
       UpdateDrawFrame();
@@ -62,7 +65,7 @@ int main(void) {
   return 0;
 }
 
-static void UpdateDrawFrame(void) {
+static int UpdateDrawFrame(double delta, void* data) {
   static raylib::ShadowTexture target(screenWidth, screenHeight);
   static raylib::Shader shader_shadow(SHADERS "shadow.vs", SHADERS "shadow.fs");
   static raylib::Shader shader_depth(0, SHADERS "depth.fs");
@@ -172,4 +175,6 @@ static void UpdateDrawFrame(void) {
     DrawText((char*)rendererName, 10, 40, 5, RED);
   EndDrawing();
   //----------------------------------------------------------------------------------
+
+  return true;
 }
