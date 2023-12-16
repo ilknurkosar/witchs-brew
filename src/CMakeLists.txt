@@ -30,15 +30,24 @@ add_custom_target(copy_misc ALL
 set(SOURCE_FILES
 		main.cpp
 		customTextures.cpp
-#		raylib_game.c
-#		screen_ending.c
-#		screen_gameplay.c
-#		screen_logo.c
-#		screen_options.c
-#		screen_title.c
+		MainLoop.cpp
+		Renderer.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} "")
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+	include
+)
+target_sources(${PROJECT_NAME}
+	PRIVATE
+		main.cpp
+		customTextures.cpp
+		MainLoop.cpp
+		Renderer.cpp
+)
+add_subdirectory(modules)
+
 add_dependencies(${PROJECT_NAME} copy_resources copy_misc)
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -47,9 +56,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	raygui
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-	headers
-)
 
 # Web Configurations
 if (${PLATFORM} STREQUAL "Web")
