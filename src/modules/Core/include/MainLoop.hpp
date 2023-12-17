@@ -1,13 +1,17 @@
 #pragma once
 
 #include "Renderer.hpp"
+#include "Vector2.hpp"
+#include "Window.hpp"
 #include <memory>
 
-//I should probably implement a singleton template
+//Intentionally didn't implement a singleton baseclass.
 class MainLoop {
 public:
+    std::unique_ptr<raylib::Window> window;
     std::unique_ptr<Renderer> renderer;
     static MainLoop *singleton;
+    raylib::Vector2 screenDim = {800,450};
 private:
     bool isRunning = false;
 public:

@@ -8,3 +8,6 @@ target_sources(${PROJECT_NAME}
 )
 
 add_subdirectory(Renderer)
+add_subdirectory(EventQueue)
+add_subdirectory(InputHandle)
+add_subdirectory(Scene)

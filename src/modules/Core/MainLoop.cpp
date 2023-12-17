@@ -1,5 +1,6 @@
 #include "MainLoop.hpp"
 #include "RendererPrototype.hpp"
+#include "Window.hpp"
 #include "raylib.h"
 #include <memory>
 
@@ -11,6 +12,11 @@ MainLoop::MainLoop(){
 #endif // !NDEBUG
     isRunning = true;
     singleton = this;
+
+    window = std::make_unique<raylib::Window>(screenDim.x,screenDim.y,
+                        "raylib [shaders] example - Hybrid render");
+    DisableCursor(); // Limit cursor to relative movement inside the window
+
     renderer = std::make_unique<RendererPrototype>();
     return;
 }
