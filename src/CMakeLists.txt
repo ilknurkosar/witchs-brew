@@ -1,11 +1,8 @@
-cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
+cmake_minimum_required(VERSION 3.20) # FetchContent is available in 3.11+
 
 project(index LANGUAGES C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Dependencies
-add_subdirectory(dependencies)
 
 set(RESOURCE_DIRECTORY
 		resources
@@ -27,24 +24,11 @@ add_custom_target(copy_misc ALL
 	COMMENT "Copying misc into binary dir"
 )
 
-set(SOURCE_FILES
-		main.cpp
-		customTextures.cpp
-		MainLoop.cpp
-		Renderer.cpp
-)
-
 add_executable(${PROJECT_NAME} "")
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-	include
-)
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		main.cpp
-		customTextures.cpp
-		MainLoop.cpp
-		Renderer.cpp
 )
 add_subdirectory(modules)
 

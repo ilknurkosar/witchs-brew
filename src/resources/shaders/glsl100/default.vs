@@ -6,7 +6,7 @@ attribute vec4 vertexColor;
 
 varying vec2 fragTexCoord;
 varying vec4 fragColor;
-varying vec4 fragLightCoord;
+varying highp vec4 fragLightCoord;
 
 uniform mat4 mvp;
 uniform mat4 ivp;

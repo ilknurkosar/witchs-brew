@@ -3,7 +3,7 @@ precision mediump float;     // Precision required for OpenGL ES2 (WebGL)
 
 varying vec2 fragTexCoord;
 varying vec4 fragColor;
-varying vec4 fragLightCoord;
+varying highp vec4 fragLightCoord;
 
 uniform sampler2D texture0;
 uniform sampler2D texture1;
@@ -13,10 +13,10 @@ const vec3 ambient = vec3(0.15);
 
 float ShadowCalc(vec4 p, float bias)
 {
-    vec3 projCoords = p.xyz / p.w;
+    highp vec3 projCoords = p.xyz / p.w;
     projCoords = projCoords * 0.5 + 0.5;
     projCoords.z = projCoords.z - bias;
-	float depth = projCoords.z;
+	highp float depth = projCoords.z;
 
 	float texDepth = texture2D(texture1, projCoords.xy).r;
 	float shadow = step(depth, texDepth);
