@@ -9,7 +9,6 @@ public:
     static Renderer *singleton;
 public:
     static Renderer *getSingleton();
-    virtual void process(double delta) override = 0;
     Renderer();
     virtual ~Renderer();
 };
