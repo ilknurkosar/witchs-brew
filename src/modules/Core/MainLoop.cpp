@@ -21,7 +21,7 @@ MainLoop::MainLoop(){
     return;
 }
 int MainLoop::Update(double delta, void* data){
-    singleton->renderer->Process(delta);
+    singleton->renderer->process(delta);
     return singleton->isRunning;
 }
 MainLoop::~MainLoop(){ // WONT RUN IN WEB. The default is to abort code mid-execution if page closes

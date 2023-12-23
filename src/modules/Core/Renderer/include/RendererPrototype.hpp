@@ -17,7 +17,7 @@ private:
   const GLubyte *rendererName;
 
 public: // Methods
-  int Process(double delta) override;
+  void process(double delta) override;
   RendererPrototype();
   ~RendererPrototype() = default;
 private:
