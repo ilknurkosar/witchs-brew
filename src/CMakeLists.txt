@@ -38,6 +38,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	raylib
 	raylib_cpp
 	raygui
+	eigen
 )
 
 

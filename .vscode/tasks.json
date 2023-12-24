@@ -37,6 +37,18 @@
             "group": "build",
             "problemMatcher": [],
             "detail": "CMake template build task"
+        },
+        {
+            "label": "run Node tests",
+            "type": "shell",
+            "command": "node mytests.js",
+            "options": {
+                "cwd": "${workspaceFolder}/build/tests"
+            },
+            "dependsOn": [
+                "CMake: build"
+            ],
+            "problemMatcher": []
         }
     ]
 }

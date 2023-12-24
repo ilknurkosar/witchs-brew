@@ -1,23 +1,9 @@
 #include "Node.hpp"
 #include <vector>
 
-Node::Node() :
-isEnabled(true),
-isProcessed(false),
-isVisible(false),
-parent(nullptr),
-children()
-{
-
+void Node::setParent(Node* parent){
+    this->parent = parent;
+    if(parent != nullptr)
+        parent->getChildren().push_back(this);
 }
 
-std::vector<Node*>& Node::getChildren(){
-    return children;
-}
-
-Node* Node::getParent(){
-    return parent;
-}
-void Node::process(double delta){
-    return; // do nothing
-}
