@@ -7,3 +7,6 @@
 [submodule "src/tests/dependencies/googletest"]
 	path = src/tests/dependencies/googletest
 	url = https://github.com/google/googletest
+[submodule "src/modules/dependencies/eigen"]
+	path = src/modules/dependencies/eigen
+	url = https://gitlab.com/libeigen/eigen
