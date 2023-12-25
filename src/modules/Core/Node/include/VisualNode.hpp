@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Node.hpp"
-
-class VisualNode : virtual public Node{
+#include "NodeType.hpp"
+class VisualNode : virtual private NodeType{
     public:
-        inline VisualNode(){this->tFlags |= TF_VISUAL;}
+        inline VisualNode(){this->f |= NodeType::VISUAL;}
 };

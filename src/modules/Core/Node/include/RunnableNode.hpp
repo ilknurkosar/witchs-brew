@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Node.hpp"
+#include "NodeType.hpp"
 #include "Runnable.hpp"
 
-class RunnableNode : virtual public Node, public Runnable {
+class RunnableNode : virtual private NodeType, public Runnable {
     public:
-        inline RunnableNode(){this->tFlags |= TF_PROCESSABLE;}
+        inline RunnableNode(){this->f |= NodeType::PROCESSABLE;}
 };

@@ -40,6 +40,12 @@ static inline Vector2 operator*(const float l, const Vector2& r){
 static inline Matrix operator*(const Matrix& l, const Matrix& r){
     return MatrixMultiply(r, l); //TODO: COMPLAIN TO WHOEVER THAT MADE THIS FUNCTION SWAPPED
 }
+static inline Vector3 operator*(const Matrix& l, const Vector3& r){
+    return Vector3Transform(r, l);
+}
+static inline Vector2 operator*(const Matrix& l, const Vector2& r){
+    return Vector2Transform(r, l);
+}
 static inline Matrix operator+(const Matrix& l, const Matrix& r){
     return MatrixAdd(l, r);
 }

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Node.hpp"
+#include "NodeType.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
-class Node3D : virtual public Node{
+class Node3D : virtual private NodeType ,public Node{
     public:
         ::Matrix transform = MatrixIdentity();
     public:
-        explicit inline Node3D(){this->tFlags |= TF_3D;}
+        explicit inline Node3D(){this->f |= NodeType::NODE3D;}
 };
