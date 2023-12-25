@@ -16,5 +16,5 @@ public:
   explicit TextureResource(TextureResource &&) = delete;
   TextureResource &operator=(TextureResource &&) = default;
   TextureResource &operator=(const TextureResource &) = delete;
-  virtual ~TextureResource();
+  virtual ~TextureResource() = default;
 };

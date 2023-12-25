@@ -11,5 +11,5 @@ public:
   explicit Resource(Resource &&) = delete;
   Resource &operator=(Resource &&) = default;
   Resource &operator=(const Resource &) = default;
-  virtual ~Resource();
+  virtual ~Resource() = default;
 };

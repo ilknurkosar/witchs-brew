@@ -29,6 +29,6 @@ class Node : virtual private NodeType {
         explicit Node(Node &&) = delete;
         Node &operator=(Node &&) = default;
         Node &operator=(const Node &) = default;
-        virtual ~Node();
+        virtual ~Node() = default;
     protected:
 };

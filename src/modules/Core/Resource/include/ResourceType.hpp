@@ -14,4 +14,5 @@ public:
     MATERIAL = 1 << 4,
   };
   explicit ResourceType() = default;
+  virtual ~ResourceType() = default;
 };

@@ -16,5 +16,5 @@ public:
   explicit MeshResource(MeshResource &&) = delete;
   MeshResource &operator=(MeshResource &&) = default;
   MeshResource &operator=(const MeshResource &) = delete;
-  virtual ~MeshResource();
+  virtual ~MeshResource() = default;
 };

@@ -16,5 +16,5 @@ public:
   explicit ShaderResource(ShaderResource &&) = delete;
   ShaderResource &operator=(ShaderResource &&) = default;
   ShaderResource &operator=(const ShaderResource &) = delete;
-  virtual ~ShaderResource();
+  virtual ~ShaderResource() = default;
 };

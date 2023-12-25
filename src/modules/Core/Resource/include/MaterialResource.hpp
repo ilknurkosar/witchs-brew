@@ -26,5 +26,5 @@ public:
   explicit MaterialResource(MaterialResource &&) = delete;
   MaterialResource &operator=(MaterialResource &&) = default;
   MaterialResource &operator=(const MaterialResource &) = delete;
-  virtual ~MaterialResource();
+  virtual ~MaterialResource() = default;
 };

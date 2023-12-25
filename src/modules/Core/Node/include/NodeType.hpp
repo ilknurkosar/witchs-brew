@@ -18,4 +18,5 @@ public:
     TEXT3D = 1 << 8,
   };
   explicit NodeType() = default;
+  virtual ~NodeType() = default;
 };

@@ -1,4 +1,5 @@
 #include "MainLoop.hpp"
+#include "RendererDefault.hpp"
 #include "RendererPrototype.hpp"
 #include "Window.hpp"
 #include "raylib.h"
@@ -17,7 +18,7 @@ MainLoop::MainLoop(){
                         "raylib [shaders] example - Hybrid render");
     DisableCursor(); // Limit cursor to relative movement inside the window
 
-    renderer = std::make_unique<RendererPrototype>();
+    renderer = std::make_unique<RendererDefault>();
     return;
 }
 int MainLoop::Update(double delta, void* data){
