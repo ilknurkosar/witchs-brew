@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-class Node : virtual private NodeType { // Inheriting Runnable is now optional
+class Node : virtual private NodeType {
     public:
     protected:
         std::vector<Node*> children{};
@@ -16,13 +16,19 @@ class Node : virtual private NodeType { // Inheriting Runnable is now optional
         void setParent(Node* parent);
         inline std::vector<Node*>& getChildren(){ return children;}
         inline bool isEnabled(){return enabled;}
-        void enable();
-        void disable();
+        inline void enable(){enabled = true;}
+        inline void disable(){enabled = false;}
         inline bool isVisible(){return visible;}
-        void makeVisible();
-        void makeInvisible();
+        inline void makeVisible(){visible = true;}
+        inline void makeInvisible(){visible = false;}
         inline bool checkType(NodeType::FLAG f){return this->f & f;}
+        virtual void Init(void** data); // 2-stage constructor separate from constructor
+        virtual void DeInit(); // 2-stage deconstructor separate from deconstructor
         explicit Node() = default;
-        virtual ~Node() = default;
+        explicit Node(const Node &) = delete;
+        explicit Node(Node &&) = delete;
+        Node &operator=(Node &&) = default;
+        Node &operator=(const Node &) = default;
+        virtual ~Node();
     protected:
 };

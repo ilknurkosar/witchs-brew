@@ -7,3 +7,5 @@ void Node::setParent(Node* parent){
         parent->getChildren().push_back(this);
 }
 
+void Node::Init(void** data){return;}
+void Node::DeInit(){return;}
