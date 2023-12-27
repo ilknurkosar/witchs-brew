@@ -18,13 +18,14 @@ class Node : virtual private NodeType {
         inline bool isEnabled(){return enabled;}
         inline void enable(){enabled = true;}
         inline void disable(){enabled = false;}
+        inline bool isOrphan(){return parent == nullptr;}
         inline bool isVisible(){return visible;}
         inline void makeVisible(){visible = true;}
         inline void makeInvisible(){visible = false;}
         inline bool checkType(NodeType::FLAG f){return this->f & f;}
         virtual void Init(void** data); // 2-stage constructor separate from constructor
         virtual void DeInit(); // 2-stage deconstructor separate from deconstructor
-        explicit Node() = default;
+        explicit inline Node() : NodeType(){};
         explicit Node(const Node &) = delete;
         explicit Node(Node &&) = delete;
         Node &operator=(Node &&) = default;

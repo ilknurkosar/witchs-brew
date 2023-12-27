@@ -1,14 +1,21 @@
 #include "RendererDefault.hpp"
 #include "Camera3D.hpp"
 #include "GLES2/gl2.h"
+#include "MaterialResource.hpp"
+#include "MeshResource.hpp"
+#include "Node3D.hpp"
 #include "RendererDefault.hpp"
 #include "Shader.hpp"
 #include "ShaderResource.hpp"
+#include "SimpleModel3D.hpp"
+#include "SimpleModelResource.hpp"
 #include "common.hpp"
 #include "raylib.h"
+#include "raymath.h"
 #include "rlgl.h"
 #include "raylib-wrap.hpp"
 #include <memory>
+#include <vector>
 
 namespace
 {
@@ -17,7 +24,13 @@ namespace
         SH_DEPTH,
         SH_GEOM,
         SH_DEFAULT,
+        MSH_CUBE,
+        MT_DEFAULT,
+        MSH_PLANE,
+        SM_CUBE,
+        SM_PLANE,
     };
+    std::vector<std::unique_ptr<SimpleModel3D>> mysm;
 }
 
 RendererDefault::RendererDefault(void)
@@ -27,7 +40,36 @@ RendererDefault::RendererDefault(void)
   resources.push_back(std::make_unique<ShaderResource>(LoadShader(0, SHADER "depth.fs")));
   resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "geom.vs", SHADER "geom.fs")));
   resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "default.vs", SHADER "default.fs")));
+  resources.push_back(std::make_unique<MeshResource>(GenMeshCube(1.0, 1.0, 1.0)));
+  // TODO: create material for shadows and stuff
+  resources.push_back(std::make_unique<MaterialResource>());
+  resources.push_back(std::make_unique<MeshResource>(GenMeshPlane(5.0, 5.0, 1, 1)));
+  resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_CUBE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
+  resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_PLANE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
   rendererName = glGetString(GL_RENDERER);
+  //(Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}
+  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), PURPLE));
+  mysm[0]->t = MatrixTranslate(0.0f, 0.5f, 1.0f);
+  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), YELLOW));
+  mysm[1]->t = MatrixTranslate(0.0f, 0.5f, -1.0f);
+  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_PLANE].get(), GREEN));
+}
+
+static Matrix getNode3DTranfsorm(Node3D &n){
+    Matrix out = n.t;
+    for(Node* p = n.getParent(); p != nullptr; p = p->getParent()){
+        if(p->checkType(NodeType::NODE3D))
+            out = out * ((Node3D*)p)->t;
+    }
+    return out;
+}
+
+static void DrawSModel(SimpleModel3D &smodel){
+    DrawMesh(smodel.getModel()->getMesh().get(), smodel.getModel()->getMaterial().get(), getNode3DTranfsorm(smodel));
+}
+static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v){
+    for(auto &sm : v)
+        DrawSModel(*sm.get());
 }
 
 void RendererDefault::process(double delta) {
@@ -35,6 +77,7 @@ void RendererDefault::process(double delta) {
   static raylib::Shader &shader_depth = ((ShaderResource*)(resources[SH_DEPTH].get()))->getShader();
   static raylib::Shader &shader_geom= ((ShaderResource*)(resources[SH_GEOM].get()))->getShader();
   static raylib::Shader &shader_default= ((ShaderResource*)(resources[SH_DEFAULT].get()))->getShader();
+
   static raylib::Camera camera{
       Vector3{0.5f, 1.0f, 1.5f}, // Camera position
       Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point
@@ -100,12 +143,7 @@ void RendererDefault::process(double delta) {
   // Raserize Scene
   light.BeginMode();
   shader_shadow.BeginMode();
-  DrawCubeWiresV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, RED);
-  DrawCubeV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, PURPLE);
-  DrawCubeWiresV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f},
-                 DARKGREEN);
-  DrawCubeV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, YELLOW);
-  DrawPlane(Vector3{0.0}, Vector2{5.0, 5.0}, RED);
+    DrawSModels(mysm);
   DrawGrid(10, 1.0f);
   shader_shadow.EndMode();
   light.EndMode();
@@ -122,12 +160,7 @@ void RendererDefault::process(double delta) {
   // extra texture needs to be attached again for every draw call
   // shader_geom.SetValue(sg_shadow,target.depth);
 
-  DrawCubeWiresV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, RED);
-  DrawCubeV((Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, PURPLE);
-  DrawCubeWiresV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f},
-                 DARKGREEN);
-  DrawCubeV((Vector3){0.0f, 0.5f, -1.0f}, (Vector3){1.0f, 1.0f, 1.0f}, YELLOW);
-  DrawPlane(Vector3{0.0}, Vector2{5.0, 5.0}, RED);
+    DrawSModels(mysm);
   DrawGrid(10, 1.0f);
   shader_default.EndMode();
   // shader_geom.EndMode();

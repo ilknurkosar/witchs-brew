@@ -12,8 +12,9 @@ class MaterialResource : virtual private ResourceType, public Resource {
 protected:
   raylib::Material _material;
 public:
-  inline raylib::Material& getMaterial(){return _material;}
-  explicit MaterialResource() = delete;
+  inline raylib::Material const& get() const{return _material;}
+  explicit inline MaterialResource(): _material() {};
+  explicit inline MaterialResource(::Material material): _material(material){}
   explicit inline MaterialResource(ShaderResource& shader, TextureResource& texture)
   : _material()
   {

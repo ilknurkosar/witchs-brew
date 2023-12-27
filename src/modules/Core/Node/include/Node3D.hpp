@@ -7,7 +7,7 @@
 
 class Node3D : virtual private NodeType ,public Node{
     public:
-        ::Matrix transform = MatrixIdentity();
+        ::Matrix t = MatrixIdentity(); // the transformation
     public:
-        explicit inline Node3D(){this->f |= NodeType::NODE3D;}
+        explicit inline Node3D() : Node() {this->f |= NodeType::NODE3D;}
 };

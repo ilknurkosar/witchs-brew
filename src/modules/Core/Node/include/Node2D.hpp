@@ -7,7 +7,7 @@
 
 class Node2D : virtual private NodeType ,public Node{
     public:
-        ::Matrix transform = MatrixIdentity(); // it makes no sense to use this in 2D but raylib has no 3x3 matrix
+        ::Matrix t = MatrixIdentity(); // it makes no sense to use this in 2D but raylib has no 3x3 matrix
     public:
         inline Node2D(){this->f |= NodeType::NODE2D;}
 };

@@ -34,7 +34,7 @@ TEST(Node_3D, flag_check){
 TEST(Node_3D, matirx_check){
     Node3D n{};
     ::Vector3 v = {1.0};
-    ASSERT_EQ(raylib::Vector3{n.transform * v}, raylib::Vector3{1.0});
+    ASSERT_EQ(raylib::Vector3{n.t * v}, raylib::Vector3{1.0});
 }
 TEST(Node_3D, paternity_test){
     Node p{};
