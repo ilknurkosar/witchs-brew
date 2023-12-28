@@ -9,11 +9,11 @@
 
 class SimpleModelResource : virtual private ResourceType, public Resource {
 protected:
-  MeshResource const *_mesh;
-  MaterialResource const *_material;
+  MeshResource *_mesh;
+  MaterialResource *_material;
 public:
-  inline MeshResource const& getMesh(){return *_mesh;}
-  inline MaterialResource const& getMaterial(){return *_material;}
+  inline MeshResource& getMesh(){return *_mesh;}
+  inline MaterialResource& getMaterial(){return *_material;}
   explicit SimpleModelResource() = delete;
   explicit inline SimpleModelResource(MeshResource *mesh, MaterialResource *material)
   : _material(material),

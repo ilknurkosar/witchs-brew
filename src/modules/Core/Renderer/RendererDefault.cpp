@@ -1,6 +1,7 @@
 #include "RendererDefault.hpp"
 #include "Camera3D.hpp"
 #include "GLES2/gl2.h"
+#include "Material.hpp"
 #include "MaterialResource.hpp"
 #include "MeshResource.hpp"
 #include "Node3D.hpp"
@@ -64,12 +65,21 @@ static Matrix getNode3DTranfsorm(Node3D &n){
     return out;
 }
 
-static void DrawSModel(SimpleModel3D &smodel){
-    DrawMesh(smodel.getModel()->getMesh().get(), smodel.getModel()->getMaterial().get(), getNode3DTranfsorm(smodel));
+static void DrawSModel(SimpleModel3D &smodel, ::Shader& activeShader){
+    // Material temp = smodel.getModel()->getMaterial().get();
+    // temp.maps[MATERIAL_MAP_DIFFUSE].color
+    raylib::Material& mat = smodel.getModel()->getMaterial().get();
+    Color col = mat.maps[MATERIAL_MAP_DIFFUSE].color;
+    Shader shad = mat.shader;
+    mat.maps[MATERIAL_MAP_DIFFUSE].color = smodel.getColor();
+    mat.shader = activeShader;
+    mat.DrawMesh(smodel.getModel()->getMesh().get(), getNode3DTranfsorm(smodel));
+    mat.maps[MATERIAL_MAP_DIFFUSE].color = col;
+    mat.shader = shad;
 }
-static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v){
+static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v, ::Shader& activeShader){
     for(auto &sm : v)
-        DrawSModel(*sm.get());
+        DrawSModel(*sm.get(),activeShader);
 }
 
 void RendererDefault::process(double delta) {
@@ -142,10 +152,7 @@ void RendererDefault::process(double delta) {
 
   // Raserize Scene
   light.BeginMode();
-  shader_shadow.BeginMode();
-    DrawSModels(mysm);
-  DrawGrid(10, 1.0f);
-  shader_shadow.EndMode();
+    DrawSModels(mysm,shader_shadow);
   light.EndMode();
   target.EndMode();
 
@@ -160,7 +167,7 @@ void RendererDefault::process(double delta) {
   // extra texture needs to be attached again for every draw call
   // shader_geom.SetValue(sg_shadow,target.depth);
 
-    DrawSModels(mysm);
+    DrawSModels(mysm,shader_default);
   DrawGrid(10, 1.0f);
   shader_default.EndMode();
   // shader_geom.EndMode();

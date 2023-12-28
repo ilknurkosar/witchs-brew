@@ -9,7 +9,7 @@ class MeshResource : virtual private ResourceType, public Resource {
 protected:
   raylib::Mesh _mesh;
 public:
-  inline raylib::Mesh const& get() const{return _mesh;}
+  inline raylib::Mesh& get() {return _mesh;}
   explicit MeshResource() = delete;
   explicit inline MeshResource(::Mesh mesh) : _mesh(mesh){this->f |= ResourceType::MESH;}
   explicit MeshResource(const MeshResource &) = delete;
