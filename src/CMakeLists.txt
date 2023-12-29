@@ -58,6 +58,7 @@ if (${PLATFORM} STREQUAL "Web")
 		"-sASYNCIFY"
 		"--preload-file=${RESOURCE_DIRECTORY}"
 #		"-sMAX_WEBGL_VERSION=2"
+		"-sGL_ENABLE_GET_PROC_ADDRESS"
 		$<$<NOT:$<CONFIG:Debug>>:
 			"--shell-file=${WEB_SHELL_FILE}"
 		>
