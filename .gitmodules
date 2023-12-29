@@ -10,3 +10,6 @@
 [submodule "src/modules/dependencies/raygui"]
 	path = src/modules/dependencies/raygui
 	url = https://github.com/raysan5/raygui
+[submodule "src/modules/dependencies/raylib"]
+	path = src/modules/dependencies/raylib
+	url = https://github.com/raysan5/raylib
