@@ -10,3 +10,6 @@
 [submodule "src/modules/dependencies/eigen"]
 	path = src/modules/dependencies/eigen
 	url = https://gitlab.com/libeigen/eigen
+[submodule "src/modules/dependencies/raygui"]
+	path = src/modules/dependencies/raygui
+	url = https://github.com/raysan5/raygui
