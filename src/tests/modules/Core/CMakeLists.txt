@@ -1,1 +1,3 @@
-add_subdirectory(Node)
+target_sources(mytests PRIVATE
+    NodeTests.cpp
+)
