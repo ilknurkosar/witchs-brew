@@ -18,6 +18,11 @@
 #include <memory>
 #include <vector>
 
+namespace raygui {
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+}
+
 namespace
 {
     enum MYRESOURCES{
@@ -32,6 +37,8 @@ namespace
         SM_PLANE,
     };
     std::vector<std::unique_ptr<SimpleModel3D>> mysm;
+
+    bool showStats = true;
 }
 
 RendererDefault::RendererDefault(void)
@@ -175,8 +182,11 @@ void RendererDefault::process(double delta) {
   shader_depth.BeginMode();
   target.depth.Draw(screenDim * .95, 0.0, -0.25f, WHITE);
   shader_depth.EndMode();
-  DrawFPS(10, 10);
-  DrawText((char *)rendererName, 10, 40, 5, RED);
+  raygui::GuiCheckBox(Rectangle{10.0,70.0,20.0, 20.0}, "Show stats", &showStats);
+  if(showStats){
+    DrawFPS(10, 10);
+    DrawText((char *)rendererName, 10, 40, 5, RED);
+  }
   EndDrawing();
   //----------------------------------------------------------------------------------
 }
