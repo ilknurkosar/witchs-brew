@@ -31,7 +31,7 @@ void main()
 {
     vec4 texelColor = texture2D(texture0, fragTexCoord);
     vec4 color = texelColor*colDiffuse*fragColor;
-   float shadow = ShadowCalc(fragLightCoord,0.00001);
+   float shadow = ShadowCalc(fragLightCoord,0.0005);
    gl_FragColor = vec4(color.rgb*(vec3(shadow) + ambient), 1.0);
 //    gl_FragColor = vec4(vec3(0.5 - fragLightCoord.z), 1.0);
 }

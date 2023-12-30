@@ -72,6 +72,13 @@ static Matrix getNode3DTranfsorm(Node3D &n){
     return out;
 }
 
+// Initializes 3D mode with custom camera (3D)
+static void CustBeginMode3D(Camera cam,Matrix projection)
+{
+    BeginMode3D(cam);
+    rlSetMatrixProjection(projection);
+}
+
 static void DrawSModel(SimpleModel3D &smodel, ::Shader& activeShader){
     // Material temp = smodel.getModel()->getMaterial().get();
     // temp.maps[MATERIAL_MAP_DIFFUSE].color
@@ -103,7 +110,7 @@ void RendererDefault::process(double delta) {
       CAMERA_PERSPECTIVE         // Camera projection type
   };
   static raylib::Camera light{
-      Vector3{9.0f, 2.0f, 5.0f}, // Camera position
+      Vector3{5.0f, 2.0f, 5.0f}, // Camera position
       Vector3{0.0f, 1.0f, 0.0f}, // Camera looking at point
       Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
       45.0f,                     // Camera field-of-view Y
@@ -127,11 +134,10 @@ void RendererDefault::process(double delta) {
   camera.Update(CAMERA_FIRST_PERSON);
   light.Update(CAMERA_ORBITAL);
 
-  Matrix lightMat =
-      MatrixPerspective(light.fovy * DEG2RAD,
+  Matrix lightPMat = MatrixPerspective(light.fovy * DEG2RAD,
                         double(screenDim.x) / double(screenDim.y),
-                        RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR) *
-      light.GetMatrix();
+                        1.0, 40.0);
+  Matrix lightMat = lightPMat * light.GetMatrix();
   Matrix ivp =
       Invert(MatrixPerspective(camera.fovy * DEG2RAD,
                                double(screenDim.x) / double(screenDim.y),
@@ -158,7 +164,7 @@ void RendererDefault::process(double delta) {
   ClearBackground(RED);
 
   // Raserize Scene
-  light.BeginMode();
+  CustBeginMode3D(light, lightPMat);
     DrawSModels(mysm,shader_shadow);
   light.EndMode();
   target.EndMode();
