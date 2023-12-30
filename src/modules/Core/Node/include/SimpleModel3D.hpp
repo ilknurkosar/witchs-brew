@@ -9,12 +9,12 @@
 #include "raylib.h"
 #include "raymath.h"
 
-class SimpleModel3D : virtual private NodeType, public VisualNode, public Node3D{
+class SimpleModel3D : public VisualNode, public Node3D{
     protected:
         Color color = WHITE;
         SimpleModelResource *smodel = nullptr;
     public:
-        explicit inline SimpleModel3D() {this->f |= NodeType::SIMPLEMODEL3D;}
+        explicit inline SimpleModel3D() {setFlag( NodeType::SIMPLEMODEL3D);}
         explicit inline SimpleModel3D(SimpleModelResource* smodel)
         : SimpleModel3D()
         {
@@ -30,4 +30,5 @@ class SimpleModel3D : virtual private NodeType, public VisualNode, public Node3D
         inline Color getColor(){return color;}
         inline void setModel(SimpleModelResource* model){this->smodel = model;}
         inline SimpleModelResource* getModel(){return smodel;}
+        virtual ~SimpleModel3D() = default;
 };

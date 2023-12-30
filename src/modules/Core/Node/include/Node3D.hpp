@@ -5,9 +5,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
-class Node3D : virtual private NodeType ,public Node{
+class Node3D : public Node{
     public:
         ::Matrix t = MatrixIdentity(); // the transformation
     public:
-        explicit inline Node3D() : Node() {this->f |= NodeType::NODE3D;}
+        explicit inline Node3D() : Node() {setFlag(NodeType::NODE3D);}
+        virtual ~Node3D() = default;
 };

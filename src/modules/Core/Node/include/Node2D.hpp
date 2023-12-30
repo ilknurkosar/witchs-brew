@@ -5,9 +5,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
-class Node2D : virtual private NodeType ,public Node{
+class Node2D : public Node{
     public:
         ::Matrix t = MatrixIdentity(); // it makes no sense to use this in 2D but raylib has no 3x3 matrix
     public:
-        inline Node2D(){this->f |= NodeType::NODE2D;}
+        inline Node2D(){setFlag(NodeType::NODE2D);}
+        virtual ~Node2D() = default;
 };

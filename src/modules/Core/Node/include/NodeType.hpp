@@ -2,9 +2,8 @@
 
 #include <cstdint>
 class NodeType {
-protected:
+private:
   uint32_t f = 0; // this variable is not visible to the end-user
-
 public:
   enum FLAG {
     PROCESSABLE = 1 << 0,
@@ -19,6 +18,9 @@ public:
     TEXT3D = 1 << 9,
     GUI = 1 << 10,
   };
+  inline bool checkType(NodeType::FLAG f){return this->f & f;}
   explicit NodeType() = default;
   virtual ~NodeType() = default;
+protected:
+  inline void setFlag(NodeType::FLAG f){this->f |= f;}
 };

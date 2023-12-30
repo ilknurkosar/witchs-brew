@@ -1,6 +1,9 @@
 #include "RendererDefault.hpp"
 #include "Camera3D.hpp"
 #include "GLES2/gl2.h"
+#include "Global.hpp"
+#include "GuiCheckBox.hpp"
+#include "GuiNode.hpp"
 #include "Material.hpp"
 #include "MaterialResource.hpp"
 #include "MeshResource.hpp"
@@ -23,6 +26,7 @@ namespace raygui {
 #include "raygui.h"
 }
 
+bool Global::showStats = true;
 namespace
 {
     enum MYRESOURCES{
@@ -37,8 +41,7 @@ namespace
         SM_PLANE,
     };
     std::vector<std::unique_ptr<SimpleModel3D>> mysm;
-
-    bool showStats = true;
+    std::vector<std::unique_ptr<GuiNode>> guis;
 }
 
 RendererDefault::RendererDefault(void)
@@ -61,8 +64,17 @@ RendererDefault::RendererDefault(void)
   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), YELLOW));
   mysm[1]->t = MatrixTranslate(0.0f, 0.5f, -1.0f);
   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_PLANE].get(), GREEN));
+  guis.push_back(std::make_unique<GuiCheckBox>(Global::showStats,::Rectangle{10.0,70.0,20.0, 20.0}, "Show stats",[](bool x){Global::showStats = x;}));
 }
 
+static Matrix getNode2DTranfsorm(Node2D &n){
+    Matrix out = n.t;
+    for(Node* p = n.getParent(); p != nullptr; p = p->getParent()){
+        if(p->checkType(NodeType::NODE2D))
+            out = out * ((Node2D*)p)->t;
+    }
+    return out;
+}
 static Matrix getNode3DTranfsorm(Node3D &n){
     Matrix out = n.t;
     for(Node* p = n.getParent(); p != nullptr; p = p->getParent()){
@@ -77,6 +89,12 @@ static void CustBeginMode3D(Camera cam,Matrix projection)
 {
     BeginMode3D(cam);
     rlSetMatrixProjection(projection);
+}
+
+static void DrawGuis(std::vector<std::unique_ptr<GuiNode>> &v){
+    for(std::unique_ptr<GuiNode> &g : v){
+        g->display();
+    }
 }
 
 static void DrawSModel(SimpleModel3D &smodel, ::Shader& activeShader){
@@ -188,8 +206,9 @@ void RendererDefault::process(double delta) {
   shader_depth.BeginMode();
   target.depth.Draw(screenDim * .95, 0.0, -0.25f, WHITE);
   shader_depth.EndMode();
-  raygui::GuiCheckBox(Rectangle{10.0,70.0,20.0, 20.0}, "Show stats", &showStats);
-  if(showStats){
+
+  DrawGuis(guis);
+  if(Global::showStats){
     DrawFPS(10, 10);
     DrawText((char *)rendererName, 10, 40, 5, RED);
   }

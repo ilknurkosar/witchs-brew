@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-class Node : virtual private NodeType {
+class Node : virtual public NodeType {
     public:
     protected:
         std::vector<Node*> children{};
@@ -22,7 +22,6 @@ class Node : virtual private NodeType {
         inline bool isVisible(){return visible;}
         inline void makeVisible(){visible = true;}
         inline void makeInvisible(){visible = false;}
-        inline bool checkType(NodeType::FLAG f){return this->f & f;}
         virtual void Init(void** data); // 2-stage constructor separate from constructor
         virtual void DeInit(); // 2-stage deconstructor separate from deconstructor
         explicit inline Node() : NodeType(){};
