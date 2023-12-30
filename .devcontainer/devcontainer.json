@@ -2,17 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/cpp
 {
 	"name": "C++",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"features": {
-		"ghcr.io/devcontainers/features/dotnet:2": {},
-		"ghcr.io/devcontainers-contrib/features/ninja-asdf:2": {},
-		"ghcr.io/ebaskoro/devcontainer-features/emscripten:1": {},
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/node:1": {}
-	}
+	"image": "ghcr.io/bugraas/witchs-brew"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
