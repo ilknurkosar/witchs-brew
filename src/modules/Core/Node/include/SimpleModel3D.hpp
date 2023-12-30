@@ -3,12 +3,13 @@
 #include "MaterialResource.hpp"
 #include "MeshResource.hpp"
 #include "Node3D.hpp"
+#include "VisualNode.hpp"
 #include "NodeType.hpp"
 #include "SimpleModelResource.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
-class SimpleModel3D : virtual private NodeType ,public Node3D{
+class SimpleModel3D : virtual private NodeType, public VisualNode, public Node3D{
     protected:
         Color color = WHITE;
         SimpleModelResource *smodel = nullptr;
@@ -24,7 +25,6 @@ class SimpleModel3D : virtual private NodeType ,public Node3D{
         {
             this->color = color;
         }
-        virtual void Init(void** data) override;
         inline bool isNull() const {return smodel == nullptr;}
         inline void setColor(Color color){this->color = color;}
         inline Color getColor(){return color;}

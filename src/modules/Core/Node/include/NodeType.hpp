@@ -17,6 +17,7 @@ public:
     TEXTURE2D = 1 << 7,
     TEXT2D = 1 << 8,
     TEXT3D = 1 << 9,
+    GUI = 1 << 10,
   };
   explicit NodeType() = default;
   virtual ~NodeType() = default;

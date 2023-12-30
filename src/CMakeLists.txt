@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.20) # FetchContent is available in 3.11+
+cmake_minimum_required(VERSION 3.25) # FetchContent is available in 3.11+
 
 project(index LANGUAGES C CXX)
+
+cmake_policy(SET CMP0142 NEW)
 
 option(BUILD_TESTING "" OFF)
 include(CTest)
