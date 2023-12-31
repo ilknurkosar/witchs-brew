@@ -3,7 +3,6 @@
 #include "NodeType.hpp"
 #include "Vector3.hpp"
 #include "raylib.h"
-#include <cstdint>
 #include <gtest/gtest.h>
 #include "raylib-wrap.hpp"
 
@@ -18,7 +17,7 @@ TEST(Node_basic, paternity_test){
     Node c{};
     c.setParent(&p);
     ASSERT_EQ(p.getChildren().size(), 1);
-    ASSERT_TRUE(p.getChildren().front() == &c);
+    ASSERT_TRUE(p.getChildren().front().get() == &c);
     ASSERT_EQ(c.getParent(), &p);
 }
 
