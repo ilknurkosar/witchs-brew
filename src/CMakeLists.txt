@@ -9,6 +9,10 @@ include(CTest)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_link_options(
+	$<$<CONFIG:Release>:-s>
+)
+
 set(RESOURCE_DIRECTORY
 		resources
 )
@@ -61,9 +65,7 @@ if (${PLATFORM} STREQUAL "Web")
 		"--preload-file=${RESOURCE_DIRECTORY}"
 #		"-sMAX_WEBGL_VERSION=2"
 		"-sGL_ENABLE_GET_PROC_ADDRESS"
-		$<$<NOT:$<CONFIG:Debug>>:
-			"--shell-file=${WEB_SHELL_FILE}"
-		>
+		$<$<NOT:$<CONFIG:Debug>>:--shell-file=${WEB_SHELL_FILE}>
 		)
 endif()
 
