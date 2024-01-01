@@ -7,6 +7,7 @@
 #include "Material.hpp"
 #include "MaterialResource.hpp"
 #include "MeshResource.hpp"
+#include "NightGui.hpp"
 #include "Node3D.hpp"
 #include "RendererDefault.hpp"
 #include "Shader.hpp"
@@ -65,6 +66,7 @@ RendererDefault::RendererDefault(void)
   mysm[1]->t = MatrixTranslate(0.0f, 0.5f, -1.0f);
   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_PLANE].get(), GREEN));
   guis.push_back(std::make_unique<GuiCheckBox>(Global::showStats,::Rectangle{10.0,70.0,20.0, 20.0}, "Show stats",[](bool x){Global::showStats = x;}));
+  guis.push_back(std::make_unique<NightGui>());
 }
 
 static Matrix getNode2DTranfsorm(Node2D &n){
