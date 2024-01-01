@@ -2,40 +2,38 @@
 
 #include <map>
 #include <functional>
-#include "raylib.h"
+#include "Runnable.hpp"
+#include "Event.hpp"
 
-enum class EventType {
-    CLICK,
-    KEY_PRESS
+namespace InputEvent{
+    enum ENUM{
+        KEY_UP,
+        KEY_DOWN,
+        KEY_RIGHT,
+        KEY_LEFT,
+        KEY_W,
+        KEY_A,
+        KEY_S,
+        KEY_D
+    };
 };
 
-struct Event {
-    EventType type;
-};
-
-class InputHandle {
+class InputHandle : public Runnable {
 private:
-    std::map<int, EventType> keyMap;
-    std::function<void(Event)> eventCallback;
+    static InputHandle* singleton;
+    std::map<int, Event> keyMap;
 
 public:
     InputHandle();
+    ~InputHandle();
 
-    void setEventCallback(std::function<void(Event)> callback);
+    virtual void process(double delta) override;
 
-    void processInput();
+    static void mapKey(int keyCode, InputEvent::ENUM eventType);
 
-    void processMouseInput();
+    static void unmapKey(int keyCode);
 
-    void processKeyboardInput();
-
-    void handleEvent(EventType eventType);
-
-    void mapKey(int keyCode, EventType eventType);
-
-    void unmapKey(int keyCode);
-
-    void clearKeyMappings();
+    static void clearKeyMappings();
 
 };
 

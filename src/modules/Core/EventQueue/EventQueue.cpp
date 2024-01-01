@@ -1,20 +1,25 @@
 #include "EventQueue.hpp"
+#include <utility>
 
-EventQueue::EventQueue() {}
+EventQueue* EventQueue::singleton = nullptr;
 
-void EventQueue::addEvent(const Event& event) {
-    activeEvents.push_back(event);
+EventQueue::EventQueue() {
+    singleton = this;
+}
+EventQueue::~EventQueue() {
+    singleton = nullptr;
 }
 
-void EventQueue::addHandler(const Event& event, std::function<bool(void*)> handler) {
-    eventHandlers[event.id].push_back(handler);
+void EventQueue::addHandler(Event event, std::function<bool(void*)> handler) {
+    if(handler)
+        singleton->eventHandlers[event].push_back(handler);
 }
 
 void EventQueue::process(double delta) {
-    for (auto& event : activeEvents) {
-        if (eventHandlers.find(event.id) != eventHandlers.end()) {
-            for (auto& handler : eventHandlers[event.id]) {
-                if (!handler(reinterpret_cast<void*>(&event))) {
+    for (auto& payload : activeEvents) {
+        if (eventHandlers.find(payload.first) != eventHandlers.end()) {
+            for (auto& handler : eventHandlers[payload.first]) {
+                if (!handler(payload.second)) {
                     break;
                 }
             }
