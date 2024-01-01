@@ -38,6 +38,7 @@ target_sources(${PROJECT_NAME}
 		main.cpp
 )
 add_subdirectory(modules)
+add_subdirectory(Game)
 
 add_dependencies(${PROJECT_NAME} copy_resources copy_misc)
 #set(raylib_VERBOSE 1)
