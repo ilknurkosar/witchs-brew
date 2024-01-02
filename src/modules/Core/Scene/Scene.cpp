@@ -10,6 +10,10 @@
 
 Scene *Scene::singleton=nullptr;
 
+void Scene::process(double delta){
+    //TODO: process
+}
+
 std::vector<VisualNode*> Scene::getVisual(){
     std::vector<VisualNode*> out{};
 

@@ -1,5 +1,3 @@
 #pragma once
 
-struct Event {
-    int id;
-};
+typedef int Event;
