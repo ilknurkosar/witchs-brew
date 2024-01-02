@@ -32,7 +32,7 @@ namespace raygui {
 #include "raygui.h"
 }
 
-bool Global::showStats = true;
+bool Global::showStats = false;
 namespace
 {
     // enum MYRESOURCES{
@@ -212,7 +212,7 @@ void RendererDefault::process(double delta) {
 */
   // Draw to screen
   BeginDrawing();
-  ClearBackground(GREEN);
+  ClearBackground(RAYWHITE);
 //   camera.BeginMode();
 //   shader_default.BeginMode();
 //   shader_default.SetValue(sd_shadow, target.depth);
@@ -233,8 +233,8 @@ void RendererDefault::process(double delta) {
     // ((GuiNode*)(guis.front()))->display(MatrixIdentity());
 
   if(Global::showStats){
-    DrawFPS(10, 10);
-    DrawText((char *)rendererName, 10, 40, 5, RED);
+    DrawFPS(650, 40);
+    DrawText((char *)rendererName, 600, 60, 5, RED);
   }
   EndDrawing();
   //----------------------------------------------------------------------------------

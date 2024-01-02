@@ -17,6 +17,8 @@ void Node::removeChild(Node* n){
 
 void Node::setParent(Node* parent){
     Node* oldparent = this->parent;
+    if(oldparent == this->parent)
+        return;
     if (oldparent != nullptr) {
         oldparent->removeChild(this);
     }

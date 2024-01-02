@@ -10,5 +10,5 @@ class NightGui: public GuiNode{
     NightGui();
     virtual void display(Matrix transform) override;
     private:
-    std::vector<::Rectangle> transformBoxes();
+    std::vector<::Rectangle> transformBoxes(Matrix m);
 };

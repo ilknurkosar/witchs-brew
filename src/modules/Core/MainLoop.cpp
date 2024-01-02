@@ -19,7 +19,7 @@ MainLoop::MainLoop(){
 
     window = std::make_unique<raylib::Window>(screenDim.x,screenDim.y,
                         "raylib [shaders] example - Hybrid render");
-    DisableCursor(); // Limit cursor to relative movement inside the window
+    // DisableCursor(); // Limit cursor to relative movement inside the window
 
     scene = std::make_unique<Scene>();
     renderer = std::make_unique<RendererDefault>();
