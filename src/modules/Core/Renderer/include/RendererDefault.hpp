@@ -12,8 +12,7 @@ class RendererDefault :public Renderer {
 public: // Attributes
   Vector2 screenDim;
 private:
-  std::vector<std::unique_ptr<Resource>> resources;
-  raylib::ShadowTexture target;
+  // raylib::ShadowTexture target;
   const GLubyte *rendererName;
 
 public: // Methods

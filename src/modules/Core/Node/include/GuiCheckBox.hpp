@@ -29,6 +29,6 @@ class GuiCheckBox : public GuiNode{
         inline void setPressed(bool pressed){this->pressed = pressed;}
         inline bool isPressed(){return pressed;}
         inline std::string& getMessage(){return message;}
-        virtual void display() override;
+        virtual void display(Matrix transform) override;
         virtual ~GuiCheckBox() = default;
 };

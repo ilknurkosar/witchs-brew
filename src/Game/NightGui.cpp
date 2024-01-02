@@ -1,15 +1,16 @@
 #include "NightGui.hpp"
 #include "raylib.h"
 #include "raymath.h"
-NightGui::NightGui() : boxes() { 
-    boxes.push_back(::Rectangle{0, 0, 100, 40});
-    t = MatrixTranslate(20,150,0);
-    }
+#include <iostream>
+NightGui::NightGui() : boxes() {
+  boxes.push_back(::Rectangle{0, 0, 100, 40});
+  // t = MatrixTranslate(20,150,0);
+}
 
-void NightGui::display() { 
-    std::vector<::Rectangle> tBoxes = transformBoxes();
-    raygui::GuiPanel(tBoxes[0], "I am a box."); 
-    }
+void NightGui::display(Matrix transform) {
+  std::vector<::Rectangle> tBoxes = transformBoxes();
+  raygui::GuiPanel(tBoxes[0], "I am a box.");
+}
 
 std::vector<::Rectangle> NightGui::transformBoxes() {
   std::vector<::Rectangle> out{};

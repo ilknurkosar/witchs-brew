@@ -21,6 +21,15 @@ TEST(Node_basic, paternity_test){
     ASSERT_EQ(c.getParent(), &p);
 }
 
+TEST(Node_med, paternity_test){
+    Node p{};
+    Node* c = new Node();
+    c->setParent(&p);
+    ASSERT_EQ(p.getChildren().size(), 1);
+    ASSERT_TRUE(p.getChildren().front().get() == c);
+    ASSERT_EQ(c->getParent(), &p);
+}
+
 TEST(Node_3D, flag_check){
     Node3D n{};
     ASSERT_TRUE(n.checkType(NodeType::NODE3D));

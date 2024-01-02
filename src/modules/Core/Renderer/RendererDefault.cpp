@@ -10,15 +10,20 @@
 #include "NightGui.hpp"
 #include "Node3D.hpp"
 #include "RendererDefault.hpp"
+#include "Scene.hpp"
 #include "Shader.hpp"
 #include "ShaderResource.hpp"
 #include "SimpleModel3D.hpp"
 #include "SimpleModelResource.hpp"
+#include "VisualNode.hpp"
 #include "common.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "rlgl.h"
 #include "raylib-wrap.hpp"
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 #include <memory>
 #include <vector>
 
@@ -30,50 +35,53 @@ namespace raygui {
 bool Global::showStats = true;
 namespace
 {
-    enum MYRESOURCES{
-        SH_SHADOW,
-        SH_DEPTH,
-        SH_GEOM,
-        SH_DEFAULT,
-        MSH_CUBE,
-        MT_DEFAULT,
-        MSH_PLANE,
-        SM_CUBE,
-        SM_PLANE,
-    };
-    std::vector<std::unique_ptr<SimpleModel3D>> mysm;
-    std::vector<std::unique_ptr<GuiNode>> guis;
+    // enum MYRESOURCES{
+    //     SH_SHADOW,
+    //     SH_DEPTH,
+    //     SH_GEOM,
+    //     SH_DEFAULT,
+    //     MSH_CUBE,
+    //     MT_DEFAULT,
+    //     MSH_PLANE,
+    //     SM_CUBE,
+    //     SM_PLANE,
+    // };
+    // std::vector<std::unique_ptr<SimpleModel3D>> mysm;
+    // std::vector<std::unique_ptr<GuiNode>> guis;
 }
 
 RendererDefault::RendererDefault(void)
-    : screenDim({800, 450}), target(screenDim.x, screenDim.y),
-      resources() {
-  resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "shadow.vs", SHADER "shadow.fs")));
-  resources.push_back(std::make_unique<ShaderResource>(LoadShader(0, SHADER "depth.fs")));
-  resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "geom.vs", SHADER "geom.fs")));
-  resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "default.vs", SHADER "default.fs")));
-  resources.push_back(std::make_unique<MeshResource>(GenMeshCube(1.0, 1.0, 1.0)));
-  // TODO: create material for shadows and stuff
-  resources.push_back(std::make_unique<MaterialResource>());
-  resources.push_back(std::make_unique<MeshResource>(GenMeshPlane(5.0, 5.0, 1, 1)));
-  resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_CUBE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
-  resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_PLANE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
+    : screenDim({800, 450})
+    //   target(screenDim.x, screenDim.y),
+    //   resources()
+{
+//   resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "shadow.vs", SHADER "shadow.fs")));
+//   resources.push_back(std::make_unique<ShaderResource>(LoadShader(0, SHADER "depth.fs")));
+//   resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "geom.vs", SHADER "geom.fs")));
+//   resources.push_back(std::make_unique<ShaderResource>(LoadShader(SHADER "default.vs", SHADER "default.fs")));
+//   resources.push_back(std::make_unique<MeshResource>(GenMeshCube(1.0, 1.0, 1.0)));
+//   // TODO: create material for shadows and stuff
+//   resources.push_back(std::make_unique<MaterialResource>());
+//   resources.push_back(std::make_unique<MeshResource>(GenMeshPlane(5.0, 5.0, 1, 1)));
+//   resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_CUBE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
+//   resources.push_back(std::make_unique<SimpleModelResource>((MeshResource*)resources[MSH_PLANE].get(),(MaterialResource*)resources[MT_DEFAULT].get()));
+//   //(Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}
+//   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), PURPLE));
+//   mysm[0]->t = MatrixTranslate(0.0f, 0.5f, 1.0f);
+//   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), YELLOW));
+//   mysm[1]->t = MatrixTranslate(0.0f, 0.5f, -1.0f);
+//   mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_PLANE].get(), GREEN));
+//   guis.push_back(std::make_unique<GuiCheckBox>(Global::showStats,::Rectangle{10.0,70.0,20.0, 20.0}, "Show stats",[](bool x){Global::showStats = x;}));
+//   guis.push_back(std::make_unique<NightGui>());
   rendererName = glGetString(GL_RENDERER);
-  //(Vector3){0.0f, 0.5f, 1.0f}, (Vector3){1.0f, 1.0f, 1.0f}
-  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), PURPLE));
-  mysm[0]->t = MatrixTranslate(0.0f, 0.5f, 1.0f);
-  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_CUBE].get(), YELLOW));
-  mysm[1]->t = MatrixTranslate(0.0f, 0.5f, -1.0f);
-  mysm.push_back(std::make_unique<SimpleModel3D>((SimpleModelResource*)resources[SM_PLANE].get(), GREEN));
-  guis.push_back(std::make_unique<GuiCheckBox>(Global::showStats,::Rectangle{10.0,70.0,20.0, 20.0}, "Show stats",[](bool x){Global::showStats = x;}));
-  guis.push_back(std::make_unique<NightGui>());
 }
 
-static Matrix getNode2DTranfsorm(Node2D &n){
-    Matrix out = n.t;
-    for(Node* p = n.getParent(); p != nullptr; p = p->getParent()){
-        if(p->checkType(NodeType::NODE2D))
+static Matrix getNode2DTranfsorm(Node2D *n){
+    Matrix out = n->t;
+    for(Node* p = n->getParent(); p != Scene::getRoot(); p = p->getParent()){
+        if(p->checkType(NodeType::NODE2D)){
             out = out * ((Node2D*)p)->t;
+        }
     }
     return out;
 }
@@ -93,13 +101,16 @@ static void CustBeginMode3D(Camera cam,Matrix projection)
     rlSetMatrixProjection(projection);
 }
 
-static void DrawGuis(std::vector<std::unique_ptr<GuiNode>> &v){
-    for(std::unique_ptr<GuiNode> &g : v){
-        g->display();
+static void DrawGuis(std::vector<Node*> &v){
+    for(auto g : v){
+        GuiNode* temp = (GuiNode*)g;
+        Matrix myt = getNode2DTranfsorm(temp);
+        temp->display(myt);
     }
 }
 
-static void DrawSModel(SimpleModel3D &smodel, ::Shader& activeShader){
+static void DrawSModel(SimpleModel3D &smodel){
+/*
     // Material temp = smodel.getModel()->getMaterial().get();
     // temp.maps[MATERIAL_MAP_DIFFUSE].color
     raylib::Material& mat = smodel.getModel()->getMaterial().get();
@@ -110,25 +121,35 @@ static void DrawSModel(SimpleModel3D &smodel, ::Shader& activeShader){
     mat.DrawMesh(smodel.getModel()->getMesh().get(), getNode3DTranfsorm(smodel));
     mat.maps[MATERIAL_MAP_DIFFUSE].color = col;
     mat.shader = shad;
+*/
+    ::DrawMesh(smodel.getModel()->getMesh().get(),smodel.getModel()->getMaterial().get(), getNode3DTranfsorm(smodel));
 }
-static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v, ::Shader& activeShader){
+static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v){
     for(auto &sm : v)
-        DrawSModel(*sm.get(),activeShader);
+        DrawSModel(*sm.get());
 }
 
 void RendererDefault::process(double delta) {
+
+//   static raylib::Camera camera{
+//       Vector3{0.5f, 1.0f, 1.5f}, // Camera position
+//       Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point
+//       Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
+//       45.0f,                     // Camera field-of-view Y
+//       CAMERA_PERSPECTIVE         // Camera projection type
+//   };
+
+  std::vector<Node*> visibles = Scene::getVisual();
+  std::vector<Node*> guis{};
+  std::copy_if(visibles.begin(),visibles.end(),std::back_inserter(guis),[](Node* x)->bool{return x->checkType(NodeType::GUI);});
+
+
+/* //TODO cry
   static raylib::Shader &shader_shadow = ((ShaderResource*)(resources[SH_SHADOW].get()))->getShader();
   static raylib::Shader &shader_depth = ((ShaderResource*)(resources[SH_DEPTH].get()))->getShader();
   static raylib::Shader &shader_geom= ((ShaderResource*)(resources[SH_GEOM].get()))->getShader();
   static raylib::Shader &shader_default= ((ShaderResource*)(resources[SH_DEFAULT].get()))->getShader();
 
-  static raylib::Camera camera{
-      Vector3{0.5f, 1.0f, 1.5f}, // Camera position
-      Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point
-      Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
-      45.0f,                     // Camera field-of-view Y
-      CAMERA_PERSPECTIVE         // Camera projection type
-  };
   static raylib::Camera light{
       Vector3{5.0f, 2.0f, 5.0f}, // Camera position
       Vector3{0.0f, 1.0f, 0.0f}, // Camera looking at point
@@ -151,8 +172,8 @@ void RendererDefault::process(double delta) {
 
   // Update
   //----------------------------------------------------------------------------------
-  camera.Update(CAMERA_FIRST_PERSON);
-  light.Update(CAMERA_ORBITAL);
+//   camera.Update(CAMERA_FIRST_PERSON);
+//   light.Update(CAMERA_ORBITAL);
 
   Matrix lightPMat = MatrixPerspective(light.fovy * DEG2RAD,
                         double(screenDim.x) / double(screenDim.y),
@@ -176,7 +197,6 @@ void RendererDefault::process(double delta) {
   shader_default.SetValue(sd_ivp, ivp);
   shader_default.SetValue(sd_lightMat, lightMat);
   //----------------------------------------------------------------------------------
-
   // Draw
   //----------------------------------------------------------------------------------
   // Draw into our custom render texture (framebuffer)
@@ -189,27 +209,29 @@ void RendererDefault::process(double delta) {
   light.EndMode();
   target.EndMode();
 
+*/
   // Draw to screen
   BeginDrawing();
   ClearBackground(GREEN);
-  camera.BeginMode();
-  shader_default.BeginMode();
-  shader_default.SetValue(sd_shadow, target.depth);
+//   camera.BeginMode();
+//   shader_default.BeginMode();
+//   shader_default.SetValue(sd_shadow, target.depth);
   // TODO: shader_geom exclusively works for DrawMesh(). only use that function
   // shader_geom.BeginMode();
   // extra texture needs to be attached again for every draw call
   // shader_geom.SetValue(sg_shadow,target.depth);
 
-    DrawSModels(mysm,shader_default);
-  DrawGrid(10, 1.0f);
-  shader_default.EndMode();
+    // DrawSModels(mysm);
+//   shader_default.EndMode();
   // shader_geom.EndMode();
-  camera.EndMode();
-  shader_depth.BeginMode();
-  target.depth.Draw(screenDim * .95, 0.0, -0.25f, WHITE);
-  shader_depth.EndMode();
+//   camera.EndMode();
+//   shader_depth.BeginMode();
+//   target.depth.Draw(screenDim * .95, 0.0, -0.25f, WHITE);
+//   shader_depth.EndMode();
 
-  DrawGuis(guis);
+    DrawGuis(guis);
+    // ((GuiNode*)(guis.front()))->display(MatrixIdentity());
+
   if(Global::showStats){
     DrawFPS(10, 10);
     DrawText((char *)rendererName, 10, 40, 5, RED);

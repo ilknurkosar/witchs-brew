@@ -6,7 +6,7 @@ DayGui::DayGui() : boxes() {
     t = MatrixTranslate(20,150,0);
     }
 
-void DayGui::display() { 
+void DayGui::display(Matrix transform) { 
     std::vector<::Rectangle> tBoxes = transformBoxes();
     raygui::GuiPanel(tBoxes[0], "I am a box."); 
     }

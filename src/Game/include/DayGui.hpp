@@ -8,7 +8,7 @@ class DayGui: public GuiNode{
     std::vector<::Rectangle> boxes;
     public:
     DayGui();
-    virtual void display() override;
+    virtual void display(Matrix transform) override;
     private:
     std::vector<::Rectangle> transformBoxes();
 };

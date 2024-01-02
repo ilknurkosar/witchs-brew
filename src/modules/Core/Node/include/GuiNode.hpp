@@ -12,6 +12,6 @@ class GuiNode : public VisualNode, public Node2D{
     protected:
     public:
         explicit inline GuiNode() {setFlag(NodeType::GUI);}
-        virtual void display() = 0;
+        virtual void display(Matrix transform) = 0;
         virtual ~GuiNode() = default;
 };

@@ -5,7 +5,7 @@
 
 void Node::removeChild(Node* n){
     std::vector<std::unique_ptr<Node>>::iterator res = children.begin();
-    if((res = std::find_if(children.begin(),children.end(), 
+    if((res = std::find_if(children.begin(),children.end(),
         [&](std::unique_ptr<Node> &v)-> bool{
             return v.get() == n;
         })) != children.end()){

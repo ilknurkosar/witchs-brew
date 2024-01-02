@@ -9,14 +9,15 @@
 class Scene : public Runnable{
 private:
     static Scene *singleton;
-    Node root{};
+    Node root;
 public:
     static void addNode(Node* n);
-    static Node& getRoot();
+    static Node* getRoot();
     static inline Scene* getSingleton(){return singleton;}
-    static std::vector<VisualNode*> getVisual();
+    static std::vector<Node*> getVisual();
     static std::vector<RunnableNode*> getRunnable();
     // There is no removal. Nodes delete themselves
+    // TODO: except they dont, fix it later
 
     virtual void process(double delta) override;
 

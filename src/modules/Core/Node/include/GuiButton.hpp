@@ -16,6 +16,6 @@ class GuiButton : public GuiNode{
         inline void setMessage(std::string message){this->message = message;}
         inline void setHandler(void (*handler)()){this->handler = handler;}
         inline std::string& getMessage(){return message;}
-        virtual void display() override;
+        virtual void display(Matrix transform) override;
         virtual ~GuiButton() = default;
 };
