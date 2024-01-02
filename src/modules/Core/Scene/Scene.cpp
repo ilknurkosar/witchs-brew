@@ -11,7 +11,10 @@
 Scene *Scene::singleton=nullptr;
 
 void Scene::process(double delta){
-    //TODO: process
+    auto runnables = getRunnable();
+    for (auto runnable : runnables) {
+        runnable->process(delta);
+    }
 }
 
 std::vector<VisualNode*> Scene::getVisual(){
@@ -65,8 +68,8 @@ Scene::~Scene(){
 }
 
 void Scene::addNode(Node *n){
-    if(n == nullptr)
-        return;
+    // if(n == nullptr) //intentionally removed safeguard
+    //     return;
     n->setParent(&Scene::getRoot());
 }
 

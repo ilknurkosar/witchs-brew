@@ -1,49 +1,39 @@
 #include "Inventory.hpp"
+#include <algorithm>
 
-Inventory::Inventory() {
-    // Constructor initialization if needed
+Inventory::Inventory()
+: items()
+{
+
 }
 
-void Inventory::AddItem(const std::string& itemName, int quantity) {
-    for (auto& item : items) {
-        if (item.first == itemName) {
-            item.second += quantity;
-            return;
-        }
-    }
-    items.emplace_back(itemName, quantity);
+void Inventory::addItem(Item item, float quantity){
+    float temp = hasItem(item) ? items[item] : 0.0f;
+    items[item] = temp + quantity;
+}
+float Inventory::takeItem(Item item, float quantity){
+    float temp = items[item];
+    items[item] = std::max(temp-quantity, 0.0f);
+    return temp > quantity ? quantity : temp;
 }
 
-void Inventory::RemoveItem(const std::string& itemName, int quantity) {
-    for (auto& item : items) {
-        if (item.first == itemName) {
-            item.second -= quantity;
-            if (item.second <= 0) {
-                items.erase(std::remove(items.begin(), items.end(), item), items.end());
-            }
-            return;
-        }
-    }
+
+void Inventory::setItem(Item item, float quantity) {
+    items[item] = quantity; // override if it exists previously
 }
 
-bool Inventory::HasItem(const std::string& itemName) const {
-    for (const auto& item : items) {
-        if (item.first == itemName) {
-            return true;
-        }
-    }
-    return false;
+void Inventory::RemoveItem(Item item) {
+    items.erase(item);
 }
 
-int Inventory::GetItemCount(const std::string& itemName) const {
-    for (const auto& item : items) {
-        if (item.first == itemName) {
-            return item.second;
-        }
-    }
-    return 0;
+bool Inventory::hasItem(Item item) const {
+    return items.count(item) > 0;
 }
 
-void Inventory::ClearInventory() {
+float Inventory::getItemAmount(Item item){
+    return hasItem(item) ? items[item] : 0.0f;
+}
+
+void Inventory::clear() {
     items.clear();
 }

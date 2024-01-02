@@ -1,19 +1,24 @@
 #pragma once
 
+#include "Item.hpp"
+#include <map>
 #include <vector>
 #include <string>
 #include <utility>
 
 class Inventory {
 private:
-    std::vector<std::pair<std::string, int>> items;
+    std::map<Item, float> items;
 
 public:
     Inventory();
 
-    void AddItem(const std::string& itemName, int quantity);
-    void RemoveItem(const std::string& itemName, int quantity);
-    bool HasItem(const std::string& itemName) const;
-    int GetItemCount(const std::string& itemName) const;
-    void ClearInventory();
+    void addItem(Item item, float quantity);
+    float takeItem(Item item, float quantity);
+    void setItem(Item item, float quantity);
+    inline std::map<Item, float>& getItems(){return items;} //HACK:
+    void RemoveItem(Item item);
+    bool hasItem(Item item) const;
+    float getItemAmount(Item item);
+    void clear();
 };

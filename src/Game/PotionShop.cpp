@@ -1,82 +1,43 @@
-#include "PotionShop.h"
-#include "Node.h"
-#include "Node2D.h"
-#include "Customer.h"
+#include "PotionShop.hpp"
+#include "Inventory.hpp"
+#include <algorithm>
+#include <cmath>
+#include <limits>
 
-PotionShop::PotionShop() : isGameRunning(false)
+PotionShop::PotionShop(float balance)
+: PotionShop()
 {
-    Node2D *mainMenu = new Node2D();
-    nodes.push_back(mainMenu);
-    PopulateInitialInventory();
+    inventory.addItem(Item::MONEY, balance);
 }
 
-PotionShop::~PotionShop()
-{
-    for (auto &node : nodes)
-    {
-        delete node;
+void PotionShop::buyUpgrade(Item upgrade){
+    if(inventory.getItemAmount(upgrade) == 1.0)
+        return; // already bought
+    float balance = inventory.getItemAmount(Item::MONEY);
+    float res = buy(upgradeSupplier.get(), upgrade, 1.0);
+    if(res != 1.0){
+        inventory.setItem(Item::MONEY, balance);
+        return; // not enough money
     }
-    nodes.clear();
-    for (auto &customer : customers)
-    {
-        delete customer;
+    upgrades.push_back(upgrade);
+}
+
+void PotionShop::buyIngredient(Item ingredient, float amount){
+    buy(ingredientSupplier.get(), ingredient, amount);
+}
+
+void PotionShop::craftPotion(){
+    float amount = std::numeric_limits<float>::max();
+    for(auto ingredient: potionIngredients.getItems()){
+        float avail = inventory.getItemAmount(ingredient.first);
+        amount = std::min(amount,avail/ingredient.second);
     }
-    customers.clear();
-    shopInventory.ClearInventory();
+    for(auto ingredient: potionIngredients.getItems())
+        inventory.takeItem(ingredient.first, amount*ingredient.second);
+    inventory.addItem(Item::POTION, amount);
 }
-
-void PotionShop::InitGame()
-{
-    // Initialization code as before
-}
-
-void PotionShop::AddCustomer(Customer *customer)
-{
-    customers.push_back(customer);
-}
-
-void PotionShop::RemoveCustomer(Customer *customer)
-{
-    // Find and remove the customer from the list
-    auto it = std::find(customers.begin(), customers.end(), customer);
-    if (it != customers.end())
-    {
-        customers.erase(it);
-        delete customer; // Optionally delete the customer object
-    }
-}
-
-void PotionShop::Update()
-{
-    // Update logic as before
-}
-
-void PotionShop::AddItemToInventory(const std::string &itemName, int quantity)
-{
-    shopInventory.AddItem(itemName, quantity);
-}
-
-void PotionShop::RemoveItemFromInventory(const std::string &itemName, int quantity)
-{
-    shopInventory.RemoveItem(itemName, quantity);
-}
-
-bool PotionShop::HasItemInInventory(const std::string &itemName) const
-{
-    return shopInventory.HasItem(itemName);
-}
-
-void PotionShop::AdjustShopFunds(float amount)
-{
-    // Adjust shop funds logic as before
-}
-
-void PotionShop::Render()
-{
-    // Render logic as before
-}
-
-void PotionShop::Run()
-{
-    // Run logic as before
+void PotionShop::uncraftPotion(){
+    float amount = inventory.getItemAmount(Item::POTION);
+    for(auto ingredient: potionIngredients.getItems())
+        inventory.addItem(ingredient.first, ingredient.second*amount);
 }

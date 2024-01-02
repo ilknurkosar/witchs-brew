@@ -13,6 +13,7 @@ private:
 public:
     static void addNode(Node* n);
     static Node& getRoot();
+    static inline Scene* getSingleton(){return singleton;}
     static std::vector<VisualNode*> getVisual();
     static std::vector<RunnableNode*> getRunnable();
     // There is no removal. Nodes delete themselves

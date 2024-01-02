@@ -1,27 +1,30 @@
 #include "TradeAgent.hpp"
+#include "Item.hpp"
+#include <utility>
 
-TradeAgent::TradeAgent(const std::string& agentName, float startingFunds) : name(agentName), funds(startingFunds) {
-    // Constructor logic if needed
+void TradeAgent::appendItem(Item item, float quantity, std::string label){
+    inventory.addItem(item, quantity);
+    labels[item] = label;
 }
 
-const std::string& TradeAgent::GetName() const {
-    return name;
+float TradeAgent::sell(TradeAgent* buyer,Item item, float quantity){
+    auto demand = getDemand(item);
+    if(demand.first.id == -1 || !buyer->inventory.hasItem(demand.first))
+        return 0.0f;
+    float out = buyer->inventory.takeItem(demand.first, quantity*demand.second);
+    float given =this->inventory.takeItem(item, out/demand.second);
+    buyer->inventory.addItem(item, given);
+    return out;
 }
 
-float TradeAgent::GetFunds() const {
-    return funds;
+void TradeAgent::setDemand(Item give, Item receive, float price){
+    demands[give] = std::pair<Item, float>{receive,price};
 }
 
-void TradeAgent::AddFunds(float amount) {
-    funds += amount;
-    // Add logic for fund addition
-}
-
-void TradeAgent::DeductFunds(float amount) {
-    if (amount <= funds) {
-        funds -= amount;
-        // Add logic for fund deduction
-    } else {
-        // Handle insufficient funds scenario
+const std::vector<Item> TradeAgent::GetAvailableItems() const{
+    std::vector<Item> out{};
+    for (auto& name : labels) {
+        out.push_back(name.first);
     }
+    return out;
 }
