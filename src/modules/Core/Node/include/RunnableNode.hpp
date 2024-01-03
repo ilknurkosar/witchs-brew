@@ -3,7 +3,7 @@
 #include "NodeType.hpp"
 #include "Runnable.hpp"
 
-class RunnableNode : virtual public NodeType, public Runnable {
+class RunnableNode : virtual public NodeType{
     public:
         inline RunnableNode(){setFlag( NodeType::PROCESSABLE);}
 };

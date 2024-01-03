@@ -3,6 +3,14 @@
 #include <memory>
 #include <vector>
 
+void Node::process(double delta){
+    return;
+}
+
+Node::~Node(){
+    setParent(nullptr);
+}
+
 void Node::removeChild(Node* n){
     std::vector<std::unique_ptr<Node>>::iterator res = children.begin();
     if((res = std::find_if(children.begin(),children.end(),

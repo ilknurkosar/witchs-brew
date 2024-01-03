@@ -1,11 +1,12 @@
 #pragma once
 
 #include "NodeType.hpp"
+#include "Runnable.hpp"
 #include <memory>
 #include <string>
 #include <vector>
 
-class Node : virtual public NodeType {
+class Node : virtual public NodeType, public Runnable {
     public:
         std::string name;
     protected:
@@ -14,6 +15,8 @@ class Node : virtual public NodeType {
         bool enabled = true; //stops children from being processed
         bool visible = true; //stops children from being rendered
     public:
+        virtual void process(double delta) override;
+
         inline Node* getParent(){return parent;}
         void setParent(Node* parent);
         Node* findChild(std::string name);
@@ -26,11 +29,12 @@ class Node : virtual public NodeType {
         inline void makeVisible(){visible = true;}
         inline void makeInvisible(){visible = false;}
         explicit inline Node() =default;
+        explicit inline Node(std::string name): Node(){this->name = name;}
         explicit Node(const Node &) = delete;
         explicit Node(Node &&) = delete;
         Node &operator=(Node &&) = default;
         Node &operator=(const Node &) = default;
-        virtual ~Node() = default;
+        virtual ~Node();
     protected:
         void removeChild(Node* n);
 };

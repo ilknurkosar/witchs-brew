@@ -22,7 +22,7 @@ int main(void) {
     // emscripten_request_animation_frame_loop(MainLoop::Update, 0);
   #else
     while(!WindowShouldClose()){
-      isRunning= MainLoop::Update(0,0);
+      MainLoop::Update();
     }
   #endif
   return 0;

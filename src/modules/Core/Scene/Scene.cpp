@@ -12,8 +12,8 @@ Scene *Scene::singleton=nullptr;
 
 void Scene::process(double delta){
     auto runnables = getRunnable();
-    for (auto runnable : runnables) {
-        ((RunnableNode*)(runnable))->process(delta);
+    for (Node* runnable : runnables) {
+        static_cast<Runnable*>(runnable)->process(delta);
     }
 }
 
@@ -51,7 +51,7 @@ std::vector<Node*> Scene::getRunnable(){
 }
 
 Scene::Scene()
-: root()
+: root("root")
 {
     singleton = this;
 }
