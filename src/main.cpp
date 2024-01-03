@@ -21,7 +21,7 @@ int main(void) {
     emscripten_request_animation_frame_loop(MainLoop::Update, 0);
     emscripten_resume_main_loop();
   #else
-    while(!sWindowShouldClose()){
+    while(!WindowShouldClose()){
       isRunning= MainLoop::Update(0,0);
     }
   #endif
