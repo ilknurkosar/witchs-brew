@@ -12,6 +12,5 @@ class NightTime: public Node, public RunnableNode {
     public:
     NightTime();
     virtual ~NightTime()=default;
-    // virtual void Init(void** data) override; // 2-stage constructor separate from constructor
     virtual void process(double delta) override;
 };

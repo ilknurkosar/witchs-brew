@@ -2,10 +2,12 @@
 
 #include "NodeType.hpp"
 #include <memory>
+#include <string>
 #include <vector>
 
 class Node : virtual public NodeType {
     public:
+        std::string name;
     protected:
         std::vector<std::unique_ptr<Node>> children{};
         Node* parent = nullptr;
@@ -14,6 +16,7 @@ class Node : virtual public NodeType {
     public:
         inline Node* getParent(){return parent;}
         void setParent(Node* parent);
+        Node* findChild(std::string name);
         inline std::vector<std::unique_ptr<Node>>& getChildren(){ return children;}
         inline bool isEnabled(){return enabled;}
         inline void enable(){enabled = true;}
@@ -22,9 +25,7 @@ class Node : virtual public NodeType {
         inline bool isVisible(){return visible;}
         inline void makeVisible(){visible = true;}
         inline void makeInvisible(){visible = false;}
-        virtual void Init(void** data); // 2-stage constructor separate from constructor
-        virtual void DeInit(); // 2-stage deconstructor separate from deconstructor
-        explicit inline Node() : NodeType(){};
+        explicit inline Node() =default;
         explicit Node(const Node &) = delete;
         explicit Node(Node &&) = delete;
         Node &operator=(Node &&) = default;

@@ -18,8 +18,8 @@ int main(void) {
   // -------------------------------------------------------------------------------------
   // Main game loop
   #ifdef PLATFORM_WEB
-    emscripten_request_animation_frame_loop(MainLoop::Update, 0);
-    emscripten_resume_main_loop();
+    emscripten_set_main_loop(MainLoop::Update, 0, true);
+    // emscripten_request_animation_frame_loop(MainLoop::Update, 0);
   #else
     while(!WindowShouldClose()){
       isRunning= MainLoop::Update(0,0);

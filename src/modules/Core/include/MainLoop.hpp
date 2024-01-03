@@ -18,7 +18,7 @@ private:
     bool isRunning = false;
 public:
     static MainLoop *getSingleton();
-    static int Update(double delta, void* data); // Per frame update function.
+    static void Update(); // Per frame update function.
     MainLoop();   // Allocate resources for runtime
     ~MainLoop(); // Save progress and free resources
 };

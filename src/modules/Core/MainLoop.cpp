@@ -27,11 +27,10 @@ MainLoop::MainLoop(){
     initialize();
     return;
 }
-int MainLoop::Update(double delta, void* data){
-
+void MainLoop::Update(){
+    float delta = GetFrameTime();
     Scene::getSingleton()->process(delta);
     Renderer::getSingleton()->process(delta);
-    return singleton->isRunning;
 }
 MainLoop::~MainLoop(){ // WONT RUN IN WEB. The default is to abort code mid-execution if page closes
     singleton = nullptr;

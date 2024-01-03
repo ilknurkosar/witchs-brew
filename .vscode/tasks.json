@@ -16,6 +16,15 @@
             ]
         },
         {
+            "label": "init emsdk",
+            "type": "shell",
+            "command": "source ~/emsdk/emsdk_env.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "emrun",
             "type": "shell",
             "command": "emrun index.html",
@@ -23,7 +32,8 @@
                 "cwd": "${workspaceFolder}/build"
             },
             "dependsOn": [
-                "CMake: build"
+                "CMake: build",
+                "init emsdk"
             ],
             "problemMatcher": []
         },

@@ -27,5 +27,5 @@ void Node::setParent(Node* parent){
         parent->getChildren().push_back(std::unique_ptr<Node>(this));
 }
 
-void Node::Init(void** data){return;}
-void Node::DeInit(){return;}
+// void Node::Init(void** data){return;}
+// void Node::DeInit(){return;}

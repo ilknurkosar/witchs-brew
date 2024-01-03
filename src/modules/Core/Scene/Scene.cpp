@@ -13,7 +13,7 @@ Scene *Scene::singleton=nullptr;
 void Scene::process(double delta){
     auto runnables = getRunnable();
     for (auto runnable : runnables) {
-        runnable->process(delta);
+        ((RunnableNode*)(runnable))->process(delta);
     }
 }
 
@@ -33,12 +33,12 @@ std::vector<Node*> Scene::getVisual(){
     recurseChild(Scene::getRoot());
     return out;
 }
-std::vector<RunnableNode*> Scene::getRunnable(){
-    std::vector<RunnableNode*> out{};
+std::vector<Node*> Scene::getRunnable(){
+    std::vector<Node*> out{};
 
     std::function<void(Node*)> recurseChild = [&](Node* n) -> void{
         if(n->checkType(NodeType::PROCESSABLE))
-            out.push_back((RunnableNode*)n);
+            out.push_back(n);
         std::vector<std::unique_ptr<Node>> &childs = n->getChildren();
         for(std::unique_ptr<Node> &c: childs){
             if(c->isEnabled())

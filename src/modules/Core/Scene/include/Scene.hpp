@@ -15,7 +15,7 @@ public:
     static Node* getRoot();
     static inline Scene* getSingleton(){return singleton;}
     static std::vector<Node*> getVisual();
-    static std::vector<RunnableNode*> getRunnable();
+    static std::vector<Node*> getRunnable();
     // There is no removal. Nodes delete themselves
     // TODO: except they dont, fix it later
 

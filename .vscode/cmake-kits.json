@@ -8,7 +8,7 @@
     },
     {
         "name": "Emscripten-local",
-        "toolchainFile": "${env:EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+        "toolchainFile": "${env:HOME}/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
         "cmakeSettings": {
             "PLATFORM": "Web"
         }
