@@ -11,6 +11,7 @@
 static const Vector2 screenDim = {800, 450};
 int main(void) {
 
+  bool isRunning = true;
   // Initialization
   //--------------------------------------------------------------------------------------
   MainLoop mainloop{};
@@ -20,8 +21,8 @@ int main(void) {
     emscripten_request_animation_frame_loop(MainLoop::Update, 0);
     emscripten_resume_main_loop();
   #else
-    while(!window.ShouldClose()){
-      MainLoop::Update(0,0);
+    while(!sWindowShouldClose()){
+      isRunning= MainLoop::Update(0,0);
     }
   #endif
   return 0;

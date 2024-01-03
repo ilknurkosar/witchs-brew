@@ -6,7 +6,6 @@ add_executable(mytests "")
 
 get_target_property(TARGET_SOURCES ${PROJECT_NAME} SOURCES)
 list(REMOVE_ITEM TARGET_SOURCES main.cpp)
-list(REMOVE_ITEM TARGET_SOURCES initialize.cpp)
 get_target_property(TARGET_INCLUDES ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 get_target_property(TARGET_LIBRARIES ${PROJECT_NAME} LINK_LIBRARIES)
 

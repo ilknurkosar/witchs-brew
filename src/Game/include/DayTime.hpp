@@ -10,6 +10,7 @@ class DayTime: public Node, public RunnableNode {
     Event endDay;
     public:
     DayTime();
-    virtual void Init(void** data) override; // 2-stage constructor separate from constructor
+    virtual ~DayTime() = default;
+    // virtual void Init(void** data) override; // 2-stage constructor separate from constructor
     virtual void process(double delta) override;
 };

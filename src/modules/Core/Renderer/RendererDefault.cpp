@@ -22,6 +22,7 @@
 #include "rlgl.h"
 #include "raylib-wrap.hpp"
 #include <algorithm>
+#include <cstdio>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -229,6 +230,9 @@ void RendererDefault::process(double delta) {
 //   target.depth.Draw(screenDim * .95, 0.0, -0.25f, WHITE);
 //   shader_depth.EndMode();
 
+  //HACK print stats
+  // std::printf("Visibles has %ld elements\n", visibles.size());
+  // std::printf("Guis has %ld elements\n", guis.size());
     DrawGuis(guis);
     // ((GuiNode*)(guis.front()))->display(MatrixIdentity());
 
