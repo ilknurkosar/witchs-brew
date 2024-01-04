@@ -11,7 +11,7 @@ InputHandle::~InputHandle(){
     singleton = nullptr;
 }
 
-void InputHandle::process(double delta){
+void InputHandle::process(){
     //TODO: Handle inputs
     //we will ignore this for now since everything is based on clicks
 }

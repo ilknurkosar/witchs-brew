@@ -1,5 +1,6 @@
 #include "MainLoop.hpp"
 #include "NodeType.hpp"
+#include "RunnableNode.hpp"
 #include "Scene.hpp"
 #include <gtest/gtest.h>
 
@@ -19,4 +20,20 @@ TEST(SceneTest, check_recursion){
         count++;
     }
     ASSERT_EQ(count, 1);
+}
+
+class MockNode: public Node, public RunnableNode{
+    public:
+    int i = 0;
+    virtual void process() override{
+        i++;
+    }
+};
+
+TEST(SceneTest, RunnableNodeTest_only_one){
+    Node* mn = new MockNode();
+    Scene s{};
+    Scene::addNode(mn);
+    s.process();
+    ASSERT_EQ(static_cast<MockNode*>(mn)->i, 1);
 }

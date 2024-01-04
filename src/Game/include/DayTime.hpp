@@ -5,12 +5,15 @@
 #include "RunnableNode.hpp"
 
 class DayTime: public Node, public RunnableNode {
+    public:
+    Event startNight;
     private:
     PotionShop* shop;
-    Event endDay;
     public:
-    DayTime();
+    void endDay();
+    virtual void Init(void* data) override; // 2-stage constructor separate from constructor
+    explicit DayTime() = delete;
+    explicit DayTime(PotionShop* shop);
     virtual ~DayTime() = default;
-    // virtual void Init(void** data) override; // 2-stage constructor separate from constructor
-    virtual void process(double delta) override;
+    virtual void process() override;
 };

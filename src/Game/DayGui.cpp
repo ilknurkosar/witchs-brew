@@ -1,23 +1,37 @@
 #include "DayGui.hpp"
+#include "DayTime.hpp"
+#include "Global.hpp"
 #include "raylib.h"
 #include "raymath.h"
-DayGui::DayGui() : boxes() { 
-    boxes.push_back(::Rectangle{0, 0, 100, 40});
-    t = MatrixTranslate(20,150,0);
-    }
+DayGui::DayGui() : boxes() {
+  boxes.push_back(::Rectangle{25, 25, 750, 400});
+  boxes.push_back(::Rectangle{15, 15, 770, 420});
+  boxes.push_back(::Rectangle{800-135, 450-95, 100, 60});
+  boxes.push_back(::Rectangle{800-255, 450-95, 100, 60});
+  // t = MatrixTranslate(25,25,0);
+}
 
-void DayGui::display(Matrix transform) { 
-    std::vector<::Rectangle> tBoxes = transformBoxes();
-    raygui::GuiPanel(tBoxes[0], "I am a box."); 
-    }
+void DayGui::display(Matrix transform) {
+  std::vector<::Rectangle> tBoxes = transformBoxes(transform);
+  DrawRectangleRec(tBoxes[1], Fade(PURPLE, 0.1));
+  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 40);
+  raygui::GuiGroupBox(tBoxes[0], "Sales");
+  raygui::GuiSetStyle(0, 0, 0);
+  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 10);
+  int ret = raygui::GuiButton(tBoxes[2], "Show FPS");
+  if(ret)
+    Global::showStats ^=1;
+  ret = raygui::GuiButton(tBoxes[3], "end Day");
+  if(ret)
+    static_cast<DayTime*>(parent)->endDay();
+}
 
-std::vector<::Rectangle> DayGui::transformBoxes() {
+std::vector<::Rectangle> DayGui::transformBoxes(Matrix m) {
   std::vector<::Rectangle> out{};
   for (Rectangle r : boxes) {
     Vector2 p{r.x, r.y};          // position
     Vector2 d{r.width, r.height}; // dimension
     p = Vector2Transform(p, t);
-    Matrix m = t;
     m.m12 = 0;
     m.m13 = 0;
     d = Vector2Transform(d, m);

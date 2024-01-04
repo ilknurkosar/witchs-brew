@@ -1,4 +1,5 @@
 target_sources(mytests PRIVATE
     NodeTests.cpp
-    CombinedTests.cpp
+    SceneTests.cpp
+    EventTests.cpp
 )

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EventQueue.hpp"
 #include "Renderer.hpp"
 #include "Scene.hpp"
 #include "Vector2.hpp"
@@ -12,6 +13,7 @@ public:
     std::unique_ptr<raylib::Window> window;
     std::unique_ptr<Scene> scene;
     std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<EventQueue> event;
     static MainLoop *singleton;
     raylib::Vector2 screenDim = {800,450};
 private:

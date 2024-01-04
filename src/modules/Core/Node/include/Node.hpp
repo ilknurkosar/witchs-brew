@@ -15,7 +15,10 @@ class Node : virtual public NodeType, public Runnable {
         bool enabled = true; //stops children from being processed
         bool visible = true; //stops children from being rendered
     public:
-        virtual void process(double delta) override;
+        virtual void process() override;
+
+        virtual void Init(void* data);
+        virtual void DeInit();
 
         inline Node* getParent(){return parent;}
         void setParent(Node* parent);

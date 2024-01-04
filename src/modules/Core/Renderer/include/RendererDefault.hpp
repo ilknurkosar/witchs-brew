@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GLES2/gl2.h"
+#include "Node.hpp"
 #include "Renderer.hpp"
 #include "Resource.hpp"
 #include "Shader.hpp"
@@ -14,9 +15,11 @@ public: // Attributes
 private:
   // raylib::ShadowTexture target;
   const GLubyte *rendererName;
+  std::vector<Node*> visibles;
 
 public: // Methods
-  void process(double delta) override;
+  static void fetchVisibles();
+  void process() override;
   RendererDefault();
   ~RendererDefault() = default;
 private:

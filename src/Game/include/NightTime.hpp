@@ -1,16 +1,19 @@
 #pragma once
-#include "DayTime.hpp"
 #include "EventQueue.hpp"
 #include "Node.hpp"
 #include "PotionShop.hpp"
 #include "RunnableNode.hpp"
 
 class NightTime: public Node, public RunnableNode {
+    public:
+    Event startDay;
     private:
     PotionShop* shop;
-    Event endNight;
     public:
-    NightTime();
+    void endNight();
+    virtual void Init(void* data)override;
+    explicit NightTime() = delete;
+    explicit NightTime(PotionShop* shop);
     virtual ~NightTime()=default;
-    virtual void process(double delta) override;
+    virtual void process() override;
 };

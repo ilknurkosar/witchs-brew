@@ -19,7 +19,7 @@ public:
     // There is no removal. Nodes delete themselves
     // TODO: except they dont, fix it later
 
-    virtual void process(double delta) override;
+    virtual void process() override;
 
     explicit Scene();
     ~Scene();

@@ -27,7 +27,7 @@ public:
     InputHandle();
     ~InputHandle();
 
-    virtual void process(double delta) override;
+    virtual void process() override;
 
     static void mapKey(int keyCode, InputEvent::ENUM eventType);
 

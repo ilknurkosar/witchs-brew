@@ -14,7 +14,7 @@ RendererPrototype::RendererPrototype(void)
   rendererName = glGetString(GL_RENDERER);
 }
 
-void RendererPrototype::process(double delta) {
+void RendererPrototype::process() {
   static raylib::Camera camera{
       Vector3{0.5f, 1.0f, 1.5f}, // Camera position
       Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point

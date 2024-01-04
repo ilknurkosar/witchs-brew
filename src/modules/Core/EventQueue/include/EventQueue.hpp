@@ -11,7 +11,9 @@
 class EventQueue : public Runnable {
 private:
     static EventQueue* singleton;
-    std::map<Event, std::unique_ptr<std::vector<bool(*)(void*)>>> eventHandlers; 
+
+    //TODO: this is supposed to be a priority queue
+    std::map<Event, std::vector<EventHandler>> eventHandlers;
     std::vector<std::pair<Event, void*>> activeEvents;
 
 public:
@@ -20,6 +22,8 @@ public:
 
     static inline EventQueue* getSingleton(){return singleton;}
     static inline void fireEvent(Event event, void* data){singleton->activeEvents.push_back({event,data});}
-    static void addHandler(Event event, bool(*handler)(void*)); //events are added only after they get a corresponding handler
-    void process(double delta) override;
+    static void addHandler(Event event, EventHandler handler); //events are added only after they get a corresponding handler
+    void process() override;
+private:
+    void addEvent(Event e);
 };

@@ -2,7 +2,7 @@
 
 class Runnable{
   public:
-    virtual void process(double delta) = 0;
+    virtual void process() = 0;
     Runnable() = default;
     virtual ~Runnable() = default;
 };

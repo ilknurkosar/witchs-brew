@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 #include "Node.hpp"
+#include "RendererDefault.hpp"
 #include "RunnableNode.hpp"
 #include "VisualNode.hpp"
 #include <functional>
@@ -10,10 +11,11 @@
 
 Scene *Scene::singleton=nullptr;
 
-void Scene::process(double delta){
+void Scene::process(){
+    RendererDefault::fetchVisibles();
     auto runnables = getRunnable();
     for (Node* runnable : runnables) {
-        static_cast<Runnable*>(runnable)->process(delta);
+        static_cast<Runnable*>(runnable)->process();
     }
 }
 

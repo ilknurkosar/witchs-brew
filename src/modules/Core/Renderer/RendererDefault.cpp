@@ -51,8 +51,15 @@ namespace
     // std::vector<std::unique_ptr<GuiNode>> guis;
 }
 
+void RendererDefault::fetchVisibles(){
+  std::vector<Node*> &visibles = static_cast<RendererDefault*>(singleton)->visibles;
+  visibles.clear();
+  visibles = Scene::getVisual();
+}
+
 RendererDefault::RendererDefault(void)
-    : screenDim({800, 450})
+    : screenDim({800, 450}),
+    visibles()
     //   target(screenDim.x, screenDim.y),
     //   resources()
 {
@@ -130,7 +137,7 @@ static void DrawSModels(std::vector<std::unique_ptr<SimpleModel3D>> &v){
         DrawSModel(*sm.get());
 }
 
-void RendererDefault::process(double delta) {
+void RendererDefault::process() {
 
 //   static raylib::Camera camera{
 //       Vector3{0.5f, 1.0f, 1.5f}, // Camera position
@@ -139,8 +146,6 @@ void RendererDefault::process(double delta) {
 //       45.0f,                     // Camera field-of-view Y
 //       CAMERA_PERSPECTIVE         // Camera projection type
 //   };
-
-  std::vector<Node*> visibles = Scene::getVisual();
   std::vector<Node*> guis{};
   std::copy_if(visibles.begin(),visibles.end(),std::back_inserter(guis),[](Node* x)->bool{return x->checkType(NodeType::GUI);});
 

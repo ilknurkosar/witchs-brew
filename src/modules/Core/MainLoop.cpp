@@ -1,4 +1,5 @@
 #include "MainLoop.hpp"
+#include "EventQueue.hpp"
 #include "Renderer.hpp"
 #include "RendererDefault.hpp"
 #include "RendererPrototype.hpp"
@@ -21,6 +22,7 @@ MainLoop::MainLoop(){
                         "raylib [shaders] example - Hybrid render");
     // DisableCursor(); // Limit cursor to relative movement inside the window
 
+    event = std::make_unique<EventQueue>();
     scene = std::make_unique<Scene>();
     renderer = std::make_unique<RendererDefault>();
 
@@ -29,8 +31,9 @@ MainLoop::MainLoop(){
 }
 void MainLoop::Update(){
     float delta = GetFrameTime();
-    Scene::getSingleton()->process(delta);
-    Renderer::getSingleton()->process(delta);
+    Scene::getSingleton()->process();
+    EventQueue::getSingleton()->process();
+    Renderer::getSingleton()->process();
 }
 MainLoop::~MainLoop(){ // WONT RUN IN WEB. The default is to abort code mid-execution if page closes
     singleton = nullptr;
