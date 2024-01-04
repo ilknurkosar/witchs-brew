@@ -4,6 +4,16 @@
 #include "Scene.hpp"
 #include <gtest/gtest.h>
 
+namespace {
+    class MockNode: public Node, public RunnableNode{
+        public:
+        int i = 0;
+        virtual void process() override{
+            i++;
+        }
+    };
+}
+
 TEST(SceneTest, check_root){
     Scene s{};
     Node* r = Scene::getRoot();
@@ -21,14 +31,6 @@ TEST(SceneTest, check_recursion){
     }
     ASSERT_EQ(count, 1);
 }
-
-class MockNode: public Node, public RunnableNode{
-    public:
-    int i = 0;
-    virtual void process() override{
-        i++;
-    }
-};
 
 TEST(SceneTest, RunnableNodeTest_only_one){
     Node* mn = new MockNode();
