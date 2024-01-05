@@ -12,6 +12,9 @@ class DayTime: public Node, public RunnableNode {
     public:
     void endDay();
     virtual void Init(void* data) override; // 2-stage constructor separate from constructor
+
+    inline PotionShop* getShop() const { return shop;}
+
     explicit DayTime() = delete;
     explicit DayTime(PotionShop* shop);
     virtual ~DayTime() = default;

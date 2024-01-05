@@ -2,13 +2,13 @@
 #include "Inventory.hpp"
 #include <limits>
 
-void InfiniteShop::AddUpgrade(Item upgrade, float price, const std::string name){
+void InfiniteShop::AddItem(Item upgrade, float price, const std::string name){
     appendItem(upgrade, std::numeric_limits<float>::infinity(), name);
     setDemand(upgrade, Item::MONEY, price);
 }
 
 //intentionally didn't put any safeguard
-void InfiniteShop::RemoveUpgrade(Item upgrade){
+void InfiniteShop::RemoveItem(Item upgrade){
     inventory.RemoveItem(upgrade);
     demands.erase(upgrade);
     labels.erase(upgrade);

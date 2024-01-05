@@ -6,14 +6,16 @@
 DayGui::DayGui() : boxes() {
   boxes.push_back(::Rectangle{25, 25, 750, 400});
   boxes.push_back(::Rectangle{15, 15, 770, 420});
-  boxes.push_back(::Rectangle{800-135, 450-95, 100, 60});
-  boxes.push_back(::Rectangle{800-255, 450-95, 100, 60});
+  boxes.push_back(::Rectangle{800-140, 450-70, 100, 30});
+  boxes.push_back(::Rectangle{800-140, 450-110, 100, 30});
+  boxes.push_back(::Rectangle{25, 325, 750, 100});
   // t = MatrixTranslate(25,25,0);
 }
 
 void DayGui::display(Matrix transform) {
   std::vector<::Rectangle> tBoxes = transformBoxes(transform);
   DrawRectangleRec(tBoxes[1], Fade(PURPLE, 0.1));
+  DrawRectangleRec(tBoxes[4], ColorAlphaBlend(RAYWHITE, Fade(PURPLE, 0.1), WHITE));
   raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 40);
   raygui::GuiGroupBox(tBoxes[0], "Sales");
   raygui::GuiSetStyle(0, 0, 0);
@@ -24,6 +26,9 @@ void DayGui::display(Matrix transform) {
   ret = raygui::GuiButton(tBoxes[3], "end Day");
   if(ret)
     static_cast<DayTime*>(parent)->endDay();
+  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 20);
+  float balance = static_cast<DayTime*>(parent)->getShop()->getBalance();
+  raygui::GuiGroupBox(tBoxes[4],TextFormat("Money%10.1f",balance));
 }
 
 std::vector<::Rectangle> DayGui::transformBoxes(Matrix m) {

@@ -4,11 +4,13 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <iostream>
+
 NightGui::NightGui() : boxes() {
   boxes.push_back(::Rectangle{25, 25, 750, 400});
   boxes.push_back(::Rectangle{15, 15, 770, 420});
-  boxes.push_back(::Rectangle{800-135, 450-95, 100, 60});
-  boxes.push_back(::Rectangle{800-255, 450-95, 100, 60});
+  boxes.push_back(::Rectangle{800-140, 450-70, 100, 30});
+  boxes.push_back(::Rectangle{800-140, 450-110, 100, 30});
+  boxes.push_back(::Rectangle{25, 325, 750, 100});
   // t = MatrixTranslate(25,25,0);
 }
 
@@ -25,6 +27,13 @@ void NightGui::display(Matrix transform) {
   ret = raygui::GuiButton(tBoxes[3], "end Night");
   if(ret)
     static_cast<NightTime*>(parent)->endNight();
+  // static char mytext[128] = "idkman";
+  // static bool edited = false;
+  // edited ^= raygui::GuiTextBox(tBoxes[4], mytext, 10, edited);
+  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 20);
+  float balance = static_cast<NightTime*>(parent)->getShop()->getBalance();
+  // std::string msg = std::format("Money: {:10.1}",balance);
+  raygui::GuiGroupBox(tBoxes[4],TextFormat("Money%10.1f",balance));
 }
 
 std::vector<::Rectangle> NightGui::transformBoxes(Matrix m) {

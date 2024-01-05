@@ -1,6 +1,7 @@
 #include "DayGui.hpp"
 #include "DayTime.hpp"
 #include "Global.hpp"
+#include "InfiniteShop.hpp"
 #include "NightGui.hpp"
 #include "NightTime.hpp"
 #include "Node.hpp"
@@ -12,10 +13,15 @@
 std::vector<std::unique_ptr<Resource>> Global::resources{};
 
 void initialize(){
-    PotionShop* shop = new PotionShop();
+    PotionShop* shop = new PotionShop(500.0);
     shop->disable();
     shop->makeInvisible();
     Scene::addNode(shop);
+    InfiniteShop *upgrade =shop->getUpgradeShop();
+    InfiniteShop *ingredient =shop->getIngredientShop();
+
+    Item U_nice = {500};
+    upgrade->AddItem(U_nice, 10.0, "Be nicer");
 
     NightGui *ng = new NightGui();
     NightTime *nt = new NightTime(shop);

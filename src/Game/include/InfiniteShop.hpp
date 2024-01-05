@@ -10,6 +10,6 @@ private:
 public:
     InfiniteShop()=default;
 
-    void AddUpgrade(Item upgrade, float price, const std::string name);
-    void RemoveUpgrade(Item upgrade);
+    void AddItem(Item upgrade, float price, const std::string name);
+    void RemoveItem(Item upgrade);
 };

@@ -12,20 +12,19 @@ class PotionShop : public TradeAgent, public Node{
     private:
     std::vector<Item> upgrades;
     Inventory potionIngredients;
-    std::unique_ptr<InfiniteShop> ingredientSupplier;
-    std::unique_ptr<InfiniteShop> upgradeSupplier;
+    std::unique_ptr<InfiniteShop> ingredientSupplier = std::make_unique<InfiniteShop>();
+    std::unique_ptr<InfiniteShop> upgradeSupplier= std::make_unique<InfiniteShop>();
     public:
     void buyUpgrade(Item upgrade);
     void buyIngredient(Item ingredient, float amount);
     void craftPotion();
     void uncraftPotion();
 
-    inline std::vector<Item>& getUpgrades(){return upgrades;}
+    inline const std::vector<Item>& getUpgrades() const {return upgrades;}
     inline Inventory& getIngredientss(){return potionIngredients;}
-    inline InfiniteShop& getUpgradeShop(){return *upgradeSupplier;}
-    inline void setUpgradeShop(InfiniteShop* shop){upgradeSupplier.reset(shop);}
-    inline InfiniteShop& getIngredientShop(){return *ingredientSupplier;}
-    inline void setIngredientShop(InfiniteShop* shop){ingredientSupplier.reset(shop);}
+    inline InfiniteShop* getUpgradeShop() const {return upgradeSupplier.get();}
+    inline InfiniteShop* getIngredientShop() const {return ingredientSupplier.get();}
+    inline float getBalance(){return inventory.getItemAmount(Item::MONEY);}
 
     PotionShop() = default;
     PotionShop(float balance);

@@ -12,6 +12,9 @@ class NightTime: public Node, public RunnableNode {
     public:
     void endNight();
     virtual void Init(void* data)override;
+
+    inline PotionShop* getShop() const { return shop;}
+
     explicit NightTime() = delete;
     explicit NightTime(PotionShop* shop);
     virtual ~NightTime()=default;
