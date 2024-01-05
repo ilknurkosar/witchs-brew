@@ -16,7 +16,10 @@ NightGui::NightGui() : boxes() {
 
 void NightGui::display(Matrix transform) {
   std::vector<::Rectangle> tBoxes = transformBoxes(transform);
-  DrawRectangleRec(tBoxes[1], Fade(RED, 0.1));
+  const Color col{255, 200, 200, 255};
+  const float alpha = 0.4;
+  DrawRectangleRec(tBoxes[1], Fade(col, alpha));
+  DrawRectangleRec(tBoxes[4], ColorAlphaBlend(RAYWHITE, Fade(col, alpha), WHITE));
   raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 40);
   raygui::GuiGroupBox(tBoxes[0], "the shop");
   raygui::GuiSetStyle(0, 0, 0);

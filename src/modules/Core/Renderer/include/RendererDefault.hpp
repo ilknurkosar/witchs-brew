@@ -13,7 +13,7 @@ class RendererDefault :public Renderer {
 public: // Attributes
   Vector2 screenDim;
 private:
-  // raylib::ShadowTexture target;
+  raylib::ShadowTexture target;
   const GLubyte *rendererName;
   std::vector<Node*> visibles;
 

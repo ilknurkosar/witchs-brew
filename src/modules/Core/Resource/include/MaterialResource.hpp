@@ -13,15 +13,18 @@ protected:
   raylib::Material _material;
 public:
   inline raylib::Material& get() {return _material;}
-  explicit inline MaterialResource(): _material() {};
-  explicit inline MaterialResource(::Material material): _material(material){}
-  explicit inline MaterialResource(ShaderResource& shader, TextureResource& texture)
-  : _material()
+  explicit inline MaterialResource(): _material() {this->f |= ResourceType::MATERIAL;};
+  explicit inline MaterialResource(::Material material): _material(material){this->f |= ResourceType::MATERIAL;}
+  explicit inline MaterialResource(ShaderResource& shader)
+  : MaterialResource()
   {
-    this->f |= ResourceType::MATERIAL;
+    _material.SetShader(shader.getShader());
+  }
+  explicit inline MaterialResource(ShaderResource& shader, TextureResource& texture)
+  : MaterialResource(shader)
+  {
     ::UnloadTexture(_material.maps[MATERIAL_MAP_DIFFUSE].texture);
     _material.SetTexture(MATERIAL_MAP_DIFFUSE,texture.getTexture());
-    _material.SetShader(shader.getShader());
   }
   explicit MaterialResource(const MaterialResource &) = delete;
   explicit MaterialResource(MaterialResource &&) = delete;

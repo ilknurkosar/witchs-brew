@@ -12,10 +12,21 @@ DayGui::DayGui() : boxes() {
   // t = MatrixTranslate(25,25,0);
 }
 
+static Color alphaBlend(Color back, Color add, float alpha){
+  return (Color){
+    (unsigned char)(back.r + add.r*alpha),
+    (unsigned char)(back.r + add.g*alpha),
+    (unsigned char)(back.r + add.b*alpha),
+    255
+  };
+}
+
 void DayGui::display(Matrix transform) {
   std::vector<::Rectangle> tBoxes = transformBoxes(transform);
-  DrawRectangleRec(tBoxes[1], Fade(PURPLE, 0.1));
-  DrawRectangleRec(tBoxes[4], ColorAlphaBlend(RAYWHITE, Fade(PURPLE, 0.1), WHITE));
+  const Color col{230, 200, 220, 255};
+  const float alpha = 0.4;
+  DrawRectangleRec(tBoxes[1], Fade(col, alpha));
+  DrawRectangleRec(tBoxes[4], ColorAlphaBlend(RAYWHITE, Fade(col, alpha), WHITE));
   raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 40);
   raygui::GuiGroupBox(tBoxes[0], "Sales");
   raygui::GuiSetStyle(0, 0, 0);
