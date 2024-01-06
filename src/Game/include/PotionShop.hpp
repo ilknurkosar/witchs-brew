@@ -25,6 +25,8 @@ class PotionShop : public TradeAgent, public Node{
     inline InfiniteShop* getUpgradeShop() const {return upgradeSupplier.get();}
     inline InfiniteShop* getIngredientShop() const {return ingredientSupplier.get();}
     inline float getBalance(){return inventory.getItemAmount(Item::MONEY);}
+    inline float getPrice(){return getDemand(Item::POTION).second;}
+    inline void setPrice(float price){setDemand(Item::POTION, Item::MONEY, price);}
 
     PotionShop() = default;
     PotionShop(float balance);

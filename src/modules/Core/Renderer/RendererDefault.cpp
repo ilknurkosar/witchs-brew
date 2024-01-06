@@ -22,16 +22,13 @@
 #include "rlgl.h"
 #include "raylib-wrap.hpp"
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <iterator>
 #include <memory>
 #include <vector>
-
-namespace raygui {
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
-}
+#include "raygui-implement.h"
 
 bool Global::showStats = false;
 namespace
@@ -146,7 +143,7 @@ void RendererDefault::process() {
   static raylib::Shader &shader_default= ((ShaderResource*)(resources[SH_DEFAULT].get()))->getShader();
 
   static raylib::Camera camera{
-      Vector3{0.5f, 1.0f, 1.5f}, // Camera position
+      Vector3{3.5f, 2.0f, 2.5f}, // Camera position
       Vector3{0.0f, 0.5f, 0.0f}, // Camera looking at point
       Vector3{0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
       45.0f,                     // Camera field-of-view Y
@@ -174,8 +171,13 @@ void RendererDefault::process() {
 
   // Update
   //----------------------------------------------------------------------------------
-  camera.Update(CAMERA_FIRST_PERSON);
-  light.Update(CAMERA_ORBITAL);
+  // camera.Update(CAMERA_FIRST_PERSON);
+  const float lSpd = 0.1f;
+  float delta = GetFrameTime();
+  float lcos = cosf(lSpd*delta);
+  float lsin = sinf(lSpd*delta);
+  Vector3 lpos = light.GetPosition();
+  light.SetPosition({lpos.x*lcos - lpos.z*lsin, lpos.y, lcos*lpos.z + lsin*lpos.x});
 
   Matrix lightPMat = MatrixPerspective(light.fovy * DEG2RAD,
                         double(screenDim.x) / double(screenDim.y),

@@ -19,6 +19,8 @@ void initialize(){
     Scene::addNode(shop);
     InfiniteShop *upgrade =shop->getUpgradeShop();
     InfiniteShop *ingredient =shop->getIngredientShop();
+    shop->appendItem(Item::POTION, 500.0f, "Potion");
+    shop->setPrice(5.0f);
 
     Item U_nice = {500};
     upgrade->AddItem(U_nice, 10.0, "Be nicer");

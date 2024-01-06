@@ -3,10 +3,7 @@
 #include "Node2D.hpp"
 #include "NodeType.hpp"
 #include "VisualNode.hpp"
-
-namespace raygui {
-    #include "raygui.h"
-}
+#include "raygui-implement.h"
 
 class GuiNode : public VisualNode, public Node2D{
     protected:

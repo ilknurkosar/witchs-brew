@@ -18,9 +18,10 @@ public:
     void setDemand(Item give, Item receive, float price);
     const std::vector<Item> GetAvailableItems() const;
 
+    inline const bool hasDemand(const Item item){return demands.count(item) > 0;}
     inline const std::string& getLabel(const Item item){return labels[item];}
     inline const float getStock(const Item item){return inventory.getItemAmount(item);}
-    inline std::pair<Item, float> getDemand(Item item){return inventory.hasItem(item) ? demands[item] : std::pair<Item,float>{Item{-1},0.0};}
+    inline std::pair<Item, float> getDemand(Item item){return hasDemand(item) ? demands[item] : std::pair<Item,float>{Item{-1},0.0};}
 
     TradeAgent() = default;
     virtual ~TradeAgent() = default;

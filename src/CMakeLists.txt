@@ -5,6 +5,7 @@ project(index LANGUAGES C CXX)
 option(BUILD_TESTING "" OFF)
 include(CTest)
 
+set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_link_options(
