@@ -13,7 +13,7 @@ namespace raygui {
 extern "C" {            // Prevents name mangling of functions
 #endif
 
-typedef enum
+enum GUI_STYLE
 {
     STYLE_DEFAULT,
     STYLE_ASHES,
@@ -27,9 +27,11 @@ typedef enum
     STYLE_LAVANDA,
     STYLE_SUNNY,
     STYLE_TERMINAL
-}GUI_STYLE;
+};
+typedef enum GUI_STYLE GUI_STYLE;
 
 Color getStyleColor();
+void setFontSize(int size);
 void setStyle(GUI_STYLE styleId);
 
 #if defined(__cplusplus)

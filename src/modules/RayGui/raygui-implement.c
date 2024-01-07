@@ -20,6 +20,10 @@ Color getStyleColor(){
     return GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 }
 
+void setFontSize(int size){
+    GuiSetStyle(DEFAULT, TEXT_SIZE , size);
+}
+
 void setStyle(GUI_STYLE styleId){
     static GUI_STYLE oldStyle = -1;
     if(oldStyle == styleId)
