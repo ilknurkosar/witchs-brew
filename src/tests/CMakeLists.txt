@@ -1,6 +1,6 @@
 add_subdirectory(dependencies/googletest)
 
-# enable_testing()
+enable_testing()
 
 add_executable(mytests "")
 
@@ -23,8 +23,9 @@ target_link_libraries(mytests PRIVATE
 add_subdirectory(modules)
 
 include(GoogleTest)
-# gtest_discover_tests(mytests)
+gtest_discover_tests(mytests)
 
-# add_test(NAME runmytests
-#     COMMAND node mytests
-# )
+add_test(
+    NAME mytests
+    COMMAND node "${CMAKE_CURRENT_BINARY_DIR}/mytests.js"
+)
