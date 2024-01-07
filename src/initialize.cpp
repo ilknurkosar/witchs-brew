@@ -19,11 +19,11 @@ void initialize(){
     Scene::addNode(shop);
     InfiniteShop *upgrade =shop->getUpgradeShop();
     InfiniteShop *ingredient =shop->getIngredientShop();
-    shop->appendItem(Item::POTION, 500.0f, "Potion");
+    shop->appendItem(Item::POTION, 500.0f, "Potion", "You chug it!");
     shop->setPrice(5.0f);
 
     Item U_nice = {500};
-    upgrade->AddItem(U_nice, 10.0, "Be nicer");
+    upgrade->AddItem(U_nice, 10.0, "Be nicer","Customers will be more willing to pay if they like you.");
 
     NightGui *ng = new NightGui();
     NightTime *nt = new NightTime(shop);

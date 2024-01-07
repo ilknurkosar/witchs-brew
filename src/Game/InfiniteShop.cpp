@@ -2,8 +2,8 @@
 #include "Inventory.hpp"
 #include <limits>
 
-void InfiniteShop::AddItem(Item upgrade, float price, const std::string name){
-    appendItem(upgrade, std::numeric_limits<float>::infinity(), name);
+void InfiniteShop::AddItem(Item upgrade, float price, const std::string name, std::string desc){
+    appendItem(upgrade, std::numeric_limits<float>::infinity(), name, desc);
     setDemand(upgrade, Item::MONEY, price);
 }
 

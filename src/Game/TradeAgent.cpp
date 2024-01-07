@@ -2,9 +2,10 @@
 #include "Item.hpp"
 #include <utility>
 
-void TradeAgent::appendItem(Item item, float quantity, std::string label){
+void TradeAgent::appendItem(Item item, float quantity, std::string label, std::string description){
     inventory.addItem(item, quantity);
     labels[item] = label;
+    descriptions[item] = description;
 }
 
 float TradeAgent::sell(TradeAgent* buyer,Item item, float quantity){
