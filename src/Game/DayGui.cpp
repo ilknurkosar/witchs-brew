@@ -1,25 +1,19 @@
 #include "DayGui.hpp"
 #include "DayTime.hpp"
 #include "Global.hpp"
+#include "raygui-implement.h"
 #include "raylib.h"
 #include "raymath.h"
 DayGui::DayGui() : boxes() {
-  boxes.push_back(::Rectangle{25, 25, 750, 400});
-  boxes.push_back(::Rectangle{15, 15, 770, 420});
-  boxes.push_back(::Rectangle{800-140, 450-70, 100, 30});
-  boxes.push_back(::Rectangle{800-140, 450-110, 100, 30});
-  boxes.push_back(::Rectangle{25, 325, 750, 100});
-  // t = MatrixTranslate(25,25,0);
+  boxes.push_back(::Rectangle{25, 25, 750, 400}); //background rectangle
+  boxes.push_back(::Rectangle{15, 15, 770, 420}); //inner encapsulating rectangle
+  boxes.push_back(::Rectangle{800-170, 450-70, 130, 30}); //Price selector
+  boxes.push_back(::Rectangle{800-170, 450-110, 130, 30});//Day starter
+  boxes.push_back(::Rectangle{25, 325, 750, 100}); // bottom half
+  boxes.push_back(::Rectangle{35, 55, 730, 250}); // upgrade list
+  boxes.push_back(::Rectangle{35, 340, 570, 70}); // description box
 }
 
-static Color alphaBlend(Color back, Color add, float alpha){
-  return (Color){
-    (unsigned char)(back.r + add.r*alpha),
-    (unsigned char)(back.r + add.g*alpha),
-    (unsigned char)(back.r + add.b*alpha),
-    255
-  };
-}
 
 void DayGui::display(Matrix transform) {
   std::vector<::Rectangle> tBoxes = transformBoxes(transform);
@@ -27,17 +21,16 @@ void DayGui::display(Matrix transform) {
   const float alpha = 0.4;
   DrawRectangleRec(tBoxes[1], Fade(col, alpha));
   DrawRectangleRec(tBoxes[4], ColorAlphaBlend(RAYWHITE, Fade(col, alpha), WHITE));
-  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 40);
+  raygui::setFontSize(40);
   raygui::GuiGroupBox(tBoxes[0], "Sales");
   raygui::GuiSetStyle(0, 0, 0);
-  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 10);
+  raygui::setFontSize(20);
   int ret = raygui::GuiButton(tBoxes[2], "Show FPS");
   if(ret)
     Global::showStats ^=1;
   ret = raygui::GuiButton(tBoxes[3], "end Day");
   if(ret)
     static_cast<DayTime*>(parent)->endDay();
-  raygui::GuiSetStyle(raygui::DEFAULT, raygui::TEXT_SIZE, 20);
   float balance = static_cast<DayTime*>(parent)->getShop()->getBalance();
   raygui::GuiGroupBox(tBoxes[4],TextFormat("Money%10.1f",balance));
 }
