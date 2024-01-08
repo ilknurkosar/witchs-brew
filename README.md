@@ -1,6 +1,7 @@
 ## Demo
 
 https://bugraas.github.io/
+https://alaula.itch.io/potion-shop
 
 ## What is this?
 
