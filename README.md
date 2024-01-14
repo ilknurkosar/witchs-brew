@@ -1,3 +1,8 @@
+## Demo
+
+https://bugraas.github.io/  
+https://alaula.itch.io/potion-shop
+
 ## What is this?
 
 This is a modified version of the raylib game template aiming for an easy setup for Web targeted games via emscripten.
