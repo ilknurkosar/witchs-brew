@@ -9,6 +9,12 @@
 #endif
 
 static const Vector2 screenDim = {800, 450};
+
+/**
+ * @brief Entry point of the whole program. End-user is not supposed to interact with this.
+ * 
+ * @return int 
+ */
 int main(void) {
 
   bool isRunning = true;

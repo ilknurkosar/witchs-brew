@@ -16,6 +16,18 @@
             ]
         },
         {
+            "label": "docs - python http server",
+            "type": "shell",
+            "command": "python -m http.server 8080",
+            "options": {
+                "cwd": "${workspaceFolder}/build/docs/html"
+            },
+            "group": "test",
+            "dependsOn": [
+                "CMake: build"
+            ]
+        },
+        {
             "label": "init emsdk",
             "type": "shell",
             "command": "source ~/emsdk/emsdk_env.sh",
@@ -30,6 +42,18 @@
             "command": "emrun index.html",
             "options": {
                 "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": [
+                "CMake: build"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "docs emrun",
+            "type": "shell",
+            "command": "emrun index.html",
+            "options": {
+                "cwd": "${workspaceFolder}/build/docs/html"
             },
             "dependsOn": [
                 "CMake: build"

@@ -7,6 +7,9 @@ include(CTest)
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# first we can indicate the documentation build as an option and set it to ON by default
+option(BUILD_DOC "Build documentation" ON)
+
 add_link_options(
 	$<$<CONFIG:Release>:-s>
 )
@@ -76,5 +79,7 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
+
+add_subdirectory(docs)
 
 add_subdirectory(tests)
