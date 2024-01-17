@@ -24,7 +24,7 @@
             },
             "group": "test",
             "dependsOn": [
-                "CMake: build"
+                "CMake: build documents"
             ]
         },
         {
@@ -56,7 +56,7 @@
                 "cwd": "${workspaceFolder}/build/docs/html"
             },
             "dependsOn": [
-                "CMake: build"
+                "CMake: build documents"
             ],
             "problemMatcher": []
         },
@@ -66,6 +66,17 @@
             "command": "build",
             "targets": [
                 "all"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "CMake template build task"
+        },
+        {
+            "type": "cmake",
+            "label": "CMake: build documents",
+            "command": "build",
+            "targets": [
+                "documentation"
             ],
             "group": "build",
             "problemMatcher": [],

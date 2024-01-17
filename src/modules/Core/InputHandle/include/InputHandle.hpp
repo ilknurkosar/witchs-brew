@@ -1,3 +1,7 @@
+/**
+ * @file InputHandle.hpp
+ * @brief Header file for the InputHandle class.
+ */
 #pragma once
 
 #include <map>
@@ -5,44 +9,69 @@
 #include "Runnable.hpp"
 #include "Event.hpp"
 
-// Namespace for input-related events
-namespace InputEvent {
-    enum ENUM {
+/**
+ * @brief Enum for built-in events
+ * 
+ */
+namespace InputEvent{
+    enum ENUM{
         KEY_UP,
         KEY_DOWN,
         KEY_RIGHT,
         KEY_LEFT,
-        KEY_W,
-        KEY_A,
-        KEY_S,
-        KEY_D
     };
 };
 
-// InputHandle class, derived from the Runnable interface
+/**
+ * @class InputHandle
+ * @brief Singleton class for handling input events.
+ * @details The InputHandle class manages key mappings and processes input events.
+ */
 class InputHandle : public Runnable {
 private:
-    static InputHandle* singleton;
-    std::map<int, Event> keyMap; // Map to store key mappings
+    static InputHandle* singleton; ///< Static pointer to the singleton instance.
+    std::map<int, Event> keyMap; ///< Map to store key mappings.
 
 public:
-    // Constructor
+    /**
+     * @brief Constructor: Initialize keyMap and set singleton.
+     */
     InputHandle();
 
-    // Destructor
+    /**
+     * @brief Destructor: Cleanup and set the singleton instance to null.
+     */
     ~InputHandle();
 
-    // Implementation of the process function from the Runnable interface
+    /**
+     * @brief Process inputs - Placeholder comment for future implementation.
+     * @details This function is a placeholder for handling inputs. Actual implementation is pending.
+     */
     virtual void process() override;
 
-    // Static method to map a key to an input event
+    /**
+     * @brief Map a key to an input event type.
+     * @param keyCode The key code to be mapped.
+     * @param eventType The input event type to be associated with the key.
+     */
     static void mapKey(int keyCode, InputEvent::ENUM eventType);
 
-    // Static method to unmap a key
+    /**
+     * @brief Unmap a key, removing it from the keyMap.
+     * @param keyCode The key code to be unmapped.
+     */
     static void unmapKey(int keyCode);
 
-    // Static method to clear all key mappings
+    /**
+     * @brief Clear all key mappings from the keyMap.
+     */
     static void clearKeyMappings();
+
+    /**
+     * @brief Static function to get the singleton instance of InputHandle.
+     * @return Pointer to the singleton instance of InputHandle.
+     */
+    static inline InputHandle* getSingleton(){return singleton;}
 };
 
 

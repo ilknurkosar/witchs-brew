@@ -11,12 +11,8 @@ EventQueue::~EventQueue() {
     singleton = nullptr;
 }
 
-void EventQueue::addEvent(Event e){
-    return;
-}
-
 void EventQueue::addHandler(Event event, EventHandler handler) {
-    if(handler){
+   if(handler){
         if(singleton->eventHandlers.count(event) != 0)
 
             singleton->eventHandlers[event].push_back(handler);

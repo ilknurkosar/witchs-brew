@@ -1,5 +1,6 @@
 #include "InputHandle.hpp"
 
+
 InputHandle* InputHandle::singleton = nullptr;
 
 InputHandle::InputHandle()
